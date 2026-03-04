@@ -41,7 +41,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="20260305-add-transaction-type-constraint" author="gemini">
+    <changeSet id="4" author="artyom">
         <addLookupTable
                 existingTableName="transactions" existingColumnName="type"
                 newTableName="transaction_types" newColumnName="type_name"
