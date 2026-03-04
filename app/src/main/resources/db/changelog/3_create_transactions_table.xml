@@ -3,7 +3,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
     <changeSet id="3" author="artyom">
         <createTable tableName="transactions">
@@ -41,7 +41,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="20260305-add-transaction-type-constraint" author="gemini">
+    <changeSet id="20260305-add-transaction-type-constraint" author="artyom">
         <addLookupTable
                 existingTableName="transactions" existingColumnName="type"
                 newTableName="transaction_types" newColumnName="type_name"

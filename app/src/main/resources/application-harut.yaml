@@ -19,4 +19,4 @@ spring:
       logback:
         rollingpolicy:
           file-name-pattern: log/FinTrack-%d{yyyy-MM-dd}.log
-          max-history: 30
+          max-history: 300
