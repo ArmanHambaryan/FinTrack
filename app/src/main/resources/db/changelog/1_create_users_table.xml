@@ -1,7 +1,7 @@
 <databaseChangeLog xmlns="https://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="https://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="1" author="shalyanharutyun">
+    <changeSet id="1" author="arman">
         <createTable tableName="users">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
