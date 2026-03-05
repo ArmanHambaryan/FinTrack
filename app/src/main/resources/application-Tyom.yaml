@@ -13,10 +13,17 @@ spring:
     hibernate:
       ddl-auto: none
 
-logging:
-  file:
-    name: log/FinTrack.log
-  logback:
-    rollingpolicy:
-      file-name-pattern: log/FinTrack-%d{yyyy-MM-dd}.log
-      max-history: 30
+
+
+
+
+    logging:
+      file:
+        name: log/FinTrack.log
+      logback:
+        rollingpolicy:
+          file-name-pattern: log/FinTrack-%d{yyyy-MM-dd}.log
+          max-history: 30
+
+server:
+  port: 8098
