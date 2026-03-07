@@ -3,9 +3,14 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="3" author="artyom">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="transactions"/>
+            </not>
+        </preConditions>
         <createTable tableName="transactions">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
@@ -42,8 +47,14 @@ http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
     </changeSet>
 
     <changeSet id="4" author="artyom">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="transaction_types"/>
+            </not>
+        </preConditions>
         <addLookupTable
                 existingTableName="transactions" existingColumnName="type"
+                newColumnDataType="VARCHAR(10)"
                 newTableName="transaction_types" newColumnName="type_name"
                 constraintName="fk_transaction_type"/>
     </changeSet>

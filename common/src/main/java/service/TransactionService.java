@@ -5,15 +5,14 @@ import model.Transaction;
 import java.util.List;
 
 public interface TransactionService {
-    public List<Transaction> findAllByUserId(int userId);
+    List<Transaction> findAllByUserId(Integer userId);
 
-    public List<Transaction> findByType(int userId);
+    List<Transaction> findByType(String type);
 
-    public void save(Transaction transaction);
+    Transaction save(Transaction transaction);
 
-    public void delete(Transaction transaction);
+    void deleteById(Integer id);
 
-    public List<Transaction>getAllTransaction(Transaction transaction);
-
+    List<Transaction> findAll();
 
 }

@@ -2,11 +2,8 @@ package com.example.app.serivce.security;
 
 import lombok.Getter;
 import model.User;
-import org.jspecify.annotations.Nullable;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
-import java.util.Collection;
 import java.util.Objects;
 
 @Getter
