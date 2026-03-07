@@ -18,11 +18,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>persistence</module>
         <module>common</module>
         <module>app</module>
     </modules>
-
 
 
 

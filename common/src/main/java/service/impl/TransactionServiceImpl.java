@@ -1,38 +1,40 @@
 package service.impl;
 
+import lombok.RequiredArgsConstructor;
 import model.Transaction;
+import org.springframework.stereotype.Service;
 import repository.TransactionRepository;
 import service.TransactionService;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class TransactionServiceImpl implements TransactionService {
-    private TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
 
     @Override
-    public List<Transaction> findAllByUserId(int Id) {
-       return transactionRepository.findByUserId(Id);
-
+    public List<Transaction> findAllByUserId(Integer userId) {
+        return transactionRepository.findByUserId(userId);
     }
 
     @Override
-    public List<Transaction> findByType(int userId) {
-       return  transactionRepository.findByType("");
+    public List<Transaction> findByType(String type) {
+        return transactionRepository.findByType(type);
     }
 
     @Override
-    public void save(Transaction transaction) {
-        transactionRepository.save(transaction);
+    public Transaction save(Transaction transaction) {
+        return transactionRepository.save(transaction);
     }
 
     @Override
-    public void delete(Transaction transaction) {
-        transactionRepository.delete(transaction);
-
+    public void deleteById(Integer id) {
+        transactionRepository.deleteById(id);
     }
 
     @Override
-    public List<Transaction> getAllTransaction(Transaction transaction) {
+    public List<Transaction> findAll() {
         return transactionRepository.findAll();
     }
 }

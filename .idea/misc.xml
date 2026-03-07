@@ -10,6 +10,11 @@
         <option value="$PROJECT_DIR$/app/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/persistence/pom.xml" />
+      </set>
+    </option>
   </component>
   <component name="ProjectResources">
     <resource url="https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd" location="$PROJECT_DIR$" />
