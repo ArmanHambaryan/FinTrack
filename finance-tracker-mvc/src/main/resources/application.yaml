@@ -23,4 +23,4 @@ spring:
           file-name-pattern: log/FinTrack-%d{yyyy-MM-dd}.log
           max-history: 30
 server:
-  port: 8099
+  port: 8082

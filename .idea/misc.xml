@@ -8,10 +8,13 @@
         <option value="$PROJECT_DIR$/persistence/pom.xml" />
         <option value="$PROJECT_DIR$/common/pom.xml" />
         <option value="$PROJECT_DIR$/app/pom.xml" />
+        <option value="$PROJECT_DIR$/finance-tracker-mvc/pom.xml" />
+        <option value="$PROJECT_DIR$/finance-tracker-rest/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/app/pom.xml" />
         <option value="$PROJECT_DIR$/persistence/pom.xml" />
       </set>
     </option>

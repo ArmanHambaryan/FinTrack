@@ -1,0 +1,13 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinTrack</title>
+</head>
+<body>
+  <h1>FinTrack</h1>
+  <p th:if="${user != null}">Welcome, <span th:text="${user.username}">user</span></p>
+  <p><a th:href="@{/loginPage}">Login</a> | <a th:href="@{/registerPage}">Register</a></p>
+</body>
+</html>
