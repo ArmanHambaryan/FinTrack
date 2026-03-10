@@ -12,7 +12,12 @@
     <label>Username: <input type="text" name="username" required></label><br>
     <label>Email: <input type="email" name="email" required></label><br>
     <label>Password: <input type="password" name="password" required></label><br>
-    <button type="submit">Create account</button>
+    <select name="role">
+      <option value="USER">User</option>
+      <option value="ADMIN">Admin</option>
+    </select>
+
+    <button type="submit">Register</button>
   </form>
   <p><a th:href="@{/loginPage}">Back to login</a></p>
 </body>

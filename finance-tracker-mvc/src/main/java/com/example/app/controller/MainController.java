@@ -4,6 +4,7 @@ import com.example.app.serivce.security.SpringUser;
 import lombok.RequiredArgsConstructor;
 import model.User;
 import model.UserRole;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,7 @@ public class MainController {
     public String mainPage(@AuthenticationPrincipal SpringUser userPrincipal,
                            ModelMap modelMap) {
         if (userPrincipal != null) {
-            modelMap.addAttribute("user", userPrincipal.getUser());
+            return "redirect:/successLogin";
         }
         return "index";
     }
@@ -56,16 +57,20 @@ public class MainController {
 
 
     @PostMapping("/register")
-    public String register(@ModelAttribute User registeredUser) {
+    public String register(@ModelAttribute User registeredUser,
+                           @RequestParam(value = "role", required = false) String role) {
         if (userService.findByEmail(registeredUser.getEmail()).isPresent()) {
             return "redirect:/registerPage?msg=Username already exists!";
+        }
+        if ("ADMIN".equalsIgnoreCase(role)) {
+            registeredUser.setRole(UserRole.ADMIN);
+        } else {
+            registeredUser.setRole(UserRole.USER);
         }
         registeredUser.setPassword(passwordEncoder.encode(registeredUser.getPassword()));
         userService.save(registeredUser);
         return "redirect:/loginPage?msg=Registration successful, pls login!";
     }
-
-
 
 
 

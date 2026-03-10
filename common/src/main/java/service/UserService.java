@@ -18,4 +18,6 @@ public interface UserService {
     Optional<User> findByEmail(String Email);
 
     void deleteById(Integer id);
+
+    void register(User user);
 }
