@@ -5,6 +5,7 @@ import model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import repository.UserRepository;
+import service.SendEmailService;
 import service.UserService;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
+    private final SendEmailService sendEmailService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -24,6 +25,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
+        if (user.getUsername().contains("@")){
+            sendEmailService.sendEmail(user.getUsername(),"Welcome to our platform",
+                    "You have successfully registered. please login http://localhost:8081/loginPage");
+        }
 
         return userRepository.save(user);
     }
