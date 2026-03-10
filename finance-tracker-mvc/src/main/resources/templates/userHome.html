@@ -8,6 +8,28 @@
 <body>
   <h1>User Home</h1>
   <p>Signed in user page.</p>
+
+  <section id="goals">
+    <h2>Goals</h2>
+    <form>
+      <label for="goalName">Goal name</label>
+      <input id="goalName" name="goalName" type="text" placeholder="Emergency Fund">
+
+      <label for="goalTargetAmount">Target amount</label>
+      <input id="goalTargetAmount" name="goalTargetAmount" type="number" min="0" step="0.01" placeholder="1000">
+
+      <label for="goalTargetDate">Target date</label>
+      <input id="goalTargetDate" name="goalTargetDate" type="date">
+
+      <button type="submit">Add Goal</button>
+    </form>
+
+    <h3>Current Goals</h3>
+    <ul>
+      <li>No goals yet.</li>
+    </ul>
+  </section>
+
   <form th:action="@{/logout}" method="post">
     <button type="submit">Logout</button>
   </form>

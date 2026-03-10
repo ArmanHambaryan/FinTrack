@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import service.CustomUserDetailsService;
 
 @Configuration
 public class WebSecurityConfig {
@@ -27,13 +27,16 @@ public class WebSecurityConfig {
                                         "/css/**",
                                         "/js/**",
                                         "/images/**").permitAll()
-                                .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
+                                .requestMatchers("/admin/**").hasAuthority("ADMIN")
+                                .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
                                 .anyRequest().authenticated()
+
                 )
                 .formLogin(form ->
                         form
                                 .loginPage("/loginPage")
                                 .loginProcessingUrl("/login")
+                                .failureUrl("/loginPage?error")
                                 .defaultSuccessUrl("/successLogin", true)
                                 .permitAll()
                 )
@@ -41,6 +44,8 @@ public class WebSecurityConfig {
                         .logoutUrl("/logout")
                         .permitAll()
                         .logoutSuccessUrl("/loginPage")
+
+
                 );
 
         return http.build();
@@ -48,7 +53,7 @@ public class WebSecurityConfig {
 
 
     @Bean
-    DaoAuthenticationProvider authenticationProvider(UserDetailsService uds, PasswordEncoder encoder) {
+    DaoAuthenticationProvider authenticationProvider(CustomUserDetailsService uds, PasswordEncoder encoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(uds);
         provider.setPasswordEncoder(encoder);
@@ -59,4 +64,6 @@ public class WebSecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+
 }

@@ -14,12 +14,12 @@ public class UserController {
 
     @GetMapping("/user/home")
     public String userHome() {
-        return "redirect:/userHome";
+        return "userHome";
     }
 
     @GetMapping("/admin/home")
     public String adminHome() {
-        return "redirect:/adminHome";
+        return "adminHome";
     }
 
 
@@ -28,6 +28,5 @@ public class UserController {
         userService.deleteById(id);
         return "redirect:/adminHome";
     }
-
 
 }

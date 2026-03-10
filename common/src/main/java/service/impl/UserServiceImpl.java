@@ -2,6 +2,7 @@ package service.impl;
 
 import lombok.RequiredArgsConstructor;
 import model.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import repository.UserRepository;
 import service.UserService;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<User> findAll() {
@@ -45,4 +47,12 @@ public class UserServiceImpl implements UserService {
     public void deleteById(Integer id) {
         userRepository.deleteById(id);
     }
+
+    @Override
+    public void register(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+    }
+
+
 }
