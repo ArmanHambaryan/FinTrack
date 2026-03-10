@@ -1,4 +1,15 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: javaai2026@gmail.com
+    password: javajava20252026
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
   liquibase:
     enabled: true
     change-log: classpath:db/master.xml
