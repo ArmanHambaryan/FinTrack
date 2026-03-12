@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transactions</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="page">
+  <div class="decor decor-1"></div>
+  <div class="decor decor-2"></div>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span>Finance Tracker</span>
+      </div>
+      <nav class="nav-links">
+        <a class="pill" th:href="@{/user/home}">User Home</a>
+        <a class="pill" th:href="@{/admin/home}">Admin Home</a>
+      </nav>
+    </header>
+
+    <section class="split">
+      <div class="card panel">
+        <h1 class="section-title">Add income</h1>
+        <p class="muted">Record incoming cash and keep your balance accurate.</p>
+        <form class="form-grid" action="/transaction/income" method="post" style="margin-top: 16px;">
+          <label class="input-group">
+            <span>Amount</span>
+            <input class="input" type="number" name="amount" required>
+          </label>
+          <label class="input-group">
+            <span>Description</span>
+            <input class="input" type="text" name="description">
+          </label>
+          <label class="input-group">
+            <span>Date</span>
+            <input class="input" type="datetime-local" name="transaction_date">
+          </label>
+          <button class="btn btn-primary" type="submit">Add Income</button>
+        </form>
+      </div>
+
+      <div class="card panel">
+        <h2 class="section-title">Add expense</h2>
+        <p class="muted">Capture spending and stay on top of your goals.</p>
+        <form class="form-grid" action="/transaction/expense" method="post" style="margin-top: 16px;">
+          <label class="input-group">
+            <span>Amount</span>
+            <input class="input" type="number" name="amount" required>
+          </label>
+          <label class="input-group">
+            <span>Description</span>
+            <input class="input" type="text" name="description">
+          </label>
+          <label class="input-group">
+            <span>Date</span>
+            <input class="input" type="datetime-local" name="transaction_date">
+          </label>
+          <button class="btn btn-secondary" type="submit">Add Expense</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="card panel" style="margin-top: 24px;">
+      <h2 class="section-title">Recent transactions</h2>
+      <p class="muted">Your latest income and expense entries.</p>
+
+      <div style="overflow-x: auto; margin-top: 16px;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Amount</th>
+              <th>Date</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:if="${#lists.isEmpty(transactions)}">
+              <td colspan="4" class="muted">No transactions yet.</td>
+            </tr>
+            <tr th:each="tx : ${transactions}">
+              <td th:text="${tx.type}">INCOME</td>
+              <td th:text="${tx.amount}">0</td>
+              <td th:text="${#temporals.format(tx.transaction_date, 'yyyy-MM-dd HH:mm')}">2026-03-12 12:00</td>
+              <td th:text="${tx.description}">-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
