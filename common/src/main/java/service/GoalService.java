@@ -17,4 +17,6 @@ public interface GoalService {
         Goal updateGoal(Integer id, Goal goal);
 
         void deleteGoal(Integer id);
+
+        List<Goal> findByUserId(Integer userId);
     }

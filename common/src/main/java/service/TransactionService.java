@@ -15,4 +15,8 @@ public interface TransactionService {
 
     List<Transaction> findAll();
 
+    void addIncome(Transaction transaction);
+
+    void addExpense(Transaction transaction);
+
 }

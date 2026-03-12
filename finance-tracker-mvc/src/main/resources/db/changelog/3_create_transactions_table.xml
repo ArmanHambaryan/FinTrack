@@ -59,4 +59,16 @@
                 constraintName="fk_transaction_type"/>
     </changeSet>
 
+    <changeSet id="5" author="artyom">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="transaction_types"/>
+        </preConditions>
+        <insert tableName="transaction_types">
+            <column name="type_name" value="INCOME"/>
+        </insert>
+        <insert tableName="transaction_types">
+            <column name="type_name" value="EXPENSE"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

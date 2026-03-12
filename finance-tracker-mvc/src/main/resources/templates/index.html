@@ -1,13 +1,47 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FinTrack</title>
+  <title>Finance Tracker</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
-<body>
-  <h1>FinTrack</h1>
-  <p th:if="${user != null}">Welcome, <span th:text="${user.username}">user</span></p>
-  <p><a th:href="@{/loginPage}">Login</a> | <a th:href="@{/registerPage}">Register</a></p>
+<body class="page">
+  <div class="decor decor-1"></div>
+  <div class="decor decor-2"></div>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span>Finance Tracker</span>
+      </div>
+      <nav class="nav-links">
+        <a class="pill" th:href="@{/loginPage}">Login</a>
+        <a class="pill" th:href="@{/registerPage}">Register</a>
+      </nav>
+    </header>
+
+    <section class="hero card hero-card">
+      <div>
+        <h1 class="hero-title">A clean dashboard for your money goals.</h1>
+        <p class="hero-subtitle">
+          Track savings goals, monitor progress, and keep every balance in view with a calm, focused workspace.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" th:href="@{/registerPage}">Create account</a>
+          <a class="btn btn-secondary" th:href="@{/loginPage}">Sign in</a>
+        </div>
+      </div>
+      <div class="card panel">
+        <h2 class="section-title">What you can do</h2>
+        <p class="muted">Add goals, set target dates, and watch your progress update in real time.</p>
+        <div class="cta-row" style="margin-top: 16px;">
+          <span class="pill">Goals</span>
+          <span class="pill">Budgets</span>
+          <span class="pill">Insights</span>
+        </div>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

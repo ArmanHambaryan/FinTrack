@@ -1,11 +1,10 @@
 package com.example.app.controller;
 
-import com.example.app.serivce.security.SpringUser;
 import lombok.RequiredArgsConstructor;
 import model.User;
 import model.UserRole;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,18 +24,21 @@ public class MainController {
 
 
     @GetMapping("/")
-    public String mainPage(@AuthenticationPrincipal SpringUser userPrincipal,
-                           ModelMap modelMap) {
-        if (userPrincipal != null) {
+    public String mainPage(Authentication authentication, ModelMap modelMap) {
+        if (authentication != null
+                && authentication.isAuthenticated()
+                && !(authentication instanceof AnonymousAuthenticationToken)) {
             return "redirect:/successLogin";
         }
         return "index";
     }
 
     @GetMapping("/successLogin")
-    public String successLogin(@AuthenticationPrincipal SpringUser springUser) {
-        if (springUser != null
-                && springUser.getUser().getRole() == UserRole.ADMIN) {
+    public String successLogin(Authentication authentication) {
+        boolean isAdmin = authentication != null
+                && authentication.getAuthorities().stream()
+                .anyMatch(auth -> "ADMIN".equals(auth.getAuthority()));
+        if (isAdmin) {
             return "redirect:/admin/home";
         } else {
             return "redirect:/user/home";
