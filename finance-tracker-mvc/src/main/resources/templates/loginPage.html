@@ -1,18 +1,45 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
-<body>
-  <h1>Login</h1>
-  <p th:if="${msg}" th:text="${msg}"></p>
-  <form th:action="@{/login}" method="post">
-    <label>Email: <input type="email" name="username" required></label><br>
-    <label>Password: <input type="password" name="password" required></label><br>
-    <button type="submit">Sign in</button>
-  </form>
-  <p><a th:href="@{/registerPage}">Create account</a></p>
+<body class="page">
+  <div class="decor decor-1"></div>
+  <div class="decor decor-2"></div>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span>Finance Tracker</span>
+      </div>
+      <nav class="nav-links">
+        <a class="pill" th:href="@{/registerPage}">Create account</a>
+      </nav>
+    </header>
+
+    <section class="card form-card">
+      <h1 class="form-title">Welcome back</h1>
+      <p class="form-subtitle">Sign in to continue building your goals.</p>
+      <p class="alert" th:if="${msg}" th:text="${msg}"></p>
+      <p class="alert error" th:if="${param.error}">Invalid email or password.</p>
+      <form class="form-grid" th:action="@{/login}" method="post">
+        <label class="input-group">
+          <span>Email</span>
+          <input class="input" type="email" name="username" required>
+        </label>
+        <label class="input-group">
+          <span>Password</span>
+          <input class="input" type="password" name="password" required>
+        </label>
+        <button class="btn btn-primary" type="submit">Sign in</button>
+      </form>
+      <p class="muted" style="margin-top: 18px;">
+        New here? <a class="pill" th:href="@{/registerPage}">Create account</a>
+      </p>
+    </section>
+  </main>
 </body>
 </html>

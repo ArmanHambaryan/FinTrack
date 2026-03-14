@@ -45,4 +45,8 @@ public class GoalServiceImpl implements GoalService {
     public void deleteGoal(Integer id) {
         goalRepository.deleteById(id);
     }
+
+    public List<Goal> findByUserId(Integer userId) {
+        return goalRepository.findByUserId(userId);
+    }
 }

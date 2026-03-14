@@ -1,37 +1,69 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>User Home</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
-<body>
-  <h1>User Home</h1>
-  <p>Signed in user page.</p>
+<body class="page">
+  <div class="decor decor-1"></div>
+  <div class="decor decor-2"></div>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span>Finance Tracker</span>
+      </div>
+      <nav class="nav-links">
+        <span class="pill">Signed in</span>
+        <a href="/transaction">
+          <button class="btn btn-secondary" type="button">Add Transaction</button>
+        </a>
+      </nav>
+    </header>
 
-  <section id="goals">
-    <h2>Goals</h2>
-    <form>
-      <label for="goalName">Goal name</label>
-      <input id="goalName" name="goalName" type="text" placeholder="Emergency Fund">
+    <section class="split">
+      <div class="card panel">
+        <h1 class="section-title">Set a new goal</h1>
+        <p class="muted">Keep your next target visible and measurable.</p>
+        <form class="form-grid" th:action="@{/goals}" method="post" style="margin-top: 16px;">
+          <label class="input-group" for="goalName">
+            <span>Goal name</span>
+            <input class="input" id="goalName" name="name" type="text" placeholder="Emergency Fund" required>
+          </label>
 
-      <label for="goalTargetAmount">Target amount</label>
-      <input id="goalTargetAmount" name="goalTargetAmount" type="number" min="0" step="0.01" placeholder="1000">
+          <label class="input-group" for="goalTargetAmount">
+            <span>Target amount</span>
+            <input class="input" id="goalTargetAmount" name="target_amount" type="number" min="0" step="0.01" placeholder="1000" required>
+          </label>
 
-      <label for="goalTargetDate">Target date</label>
-      <input id="goalTargetDate" name="goalTargetDate" type="date">
+          <label class="input-group" for="goalTargetDate">
+            <span>Target date</span>
+            <input class="input" id="goalTargetDate" name="deadline" type="date">
+          </label>
 
-      <button type="submit">Add Goal</button>
-    </form>
+          <input type="hidden" name="saved_amount" value="0">
 
-    <h3>Current Goals</h3>
-    <ul>
-      <li>No goals yet.</li>
-    </ul>
-  </section>
+          <button class="btn btn-primary" type="submit">Add Goal</button>
+        </form>
+      </div>
 
-  <form th:action="@{/logout}" method="post">
-    <button type="submit">Logout</button>
-  </form>
+      <div class="card panel">
+        <h2 class="section-title">Current goals</h2>
+        <p class="muted">Stay focused with quick snapshots.</p>
+        <ul class="goals-list">
+          <li class="goal-item" th:if="${#lists.isEmpty(goals)}">No goals yet.</li>
+          <li class="goal-item" th:each="goal : ${goals}">
+            <span th:text="${goal.name}">Goal name</span>
+            <span th:text="${goal.target_amount}">0</span>
+          </li>
+        </ul>
+        <form class="logout-form" th:action="@{/logout}" method="post">
+          <button class="btn btn-ghost" type="submit">Logout</button>
+        </form>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

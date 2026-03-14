@@ -1,24 +1,55 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register</title>
+  <title>Create Account</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
-<body>
-  <h1>Register</h1>
-  <p th:if="${msg}" th:text="${msg}"></p>
-  <form th:action="@{/register}" method="post">
-    <label>Username: <input type="text" name="username" required></label><br>
-    <label>Email: <input type="email" name="email" required></label><br>
-    <label>Password: <input type="password" name="password" required></label><br>
-    <select name="role">
-      <option value="USER">User</option>
-      <option value="ADMIN">Admin</option>
-    </select>
+<body class="page">
+  <div class="decor decor-1"></div>
+  <div class="decor decor-2"></div>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark"></span>
+        <span>Finance Tracker</span>
+      </div>
+      <nav class="nav-links">
+        <a class="pill" th:href="@{/loginPage}">Login</a>
+      </nav>
+    </header>
 
-    <button type="submit">Register</button>
-  </form>
-  <p><a th:href="@{/loginPage}">Back to login</a></p>
+    <section class="card form-card">
+      <h1 class="form-title">Create your account</h1>
+      <p class="form-subtitle">Pick a role, set up your credentials, and get started.</p>
+      <p class="alert" th:if="${msg}" th:text="${msg}"></p>
+      <form class="form-grid" th:action="@{/register}" method="post">
+        <label class="input-group">
+          <span>Username</span>
+          <input class="input" type="text" name="username" required>
+        </label>
+        <label class="input-group">
+          <span>Email</span>
+          <input class="input" type="email" name="email" required>
+        </label>
+        <label class="input-group">
+          <span>Password</span>
+          <input class="input" type="password" name="password" required>
+        </label>
+        <label class="input-group">
+          <span>Role</span>
+          <select class="input select" name="role">
+            <option value="USER">User</option>
+            <option value="ADMIN">Admin</option>
+          </select>
+        </label>
+        <button class="btn btn-primary" type="submit">Register</button>
+      </form>
+      <p class="muted" style="margin-top: 18px;">
+        Already have an account? <a class="pill" th:href="@{/loginPage}">Back to login</a>
+      </p>
+    </section>
+  </main>
 </body>
 </html>

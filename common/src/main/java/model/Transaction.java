@@ -32,4 +32,23 @@ public class Transaction {
     private String description;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
+
+    @jakarta.persistence.PrePersist
+    public void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        if (transaction_date == null) {
+            transaction_date = now;
+        }
+        if (created_at == null) {
+            created_at = now;
+        }
+        if (updated_at == null) {
+            updated_at = now;
+        }
+    }
+
+    @jakarta.persistence.PreUpdate
+    public void preUpdate() {
+        updated_at = LocalDateTime.now();
+    }
 }
