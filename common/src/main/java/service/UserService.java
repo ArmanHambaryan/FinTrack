@@ -21,5 +21,10 @@ public interface UserService {
 
     void register(User user);
 
-    void updateLastActive(String email);
+    void block(Integer id, int hours);
+
+    void incrementLoginAttempts(Integer id);
+
+    void resetLoginAttempts(Integer id);
+
 }
