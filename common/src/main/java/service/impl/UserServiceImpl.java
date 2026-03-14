@@ -10,6 +10,7 @@ import service.UserService;
 
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -59,5 +60,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-
+    @Override
+    public void updateLastActive(String email) {
+        userRepository.findByEmail(email).ifPresent(user -> {
+            user.setLastActive(LocalDateTime.now());
+            userRepository.save(user);
+        });
+    }
 }

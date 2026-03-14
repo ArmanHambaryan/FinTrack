@@ -3,13 +3,14 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: javaai2026@gmail.com
-    password: javajava20252026
-  properties:
-    mail:
-      smtp:
-        auth: true
-        starttls:
-          enable: true
+    password: xqgu riev zykv wwew
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
   liquibase:
     enabled: true
     change-log: classpath:db/master.xml
@@ -24,8 +25,6 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
-
-
     logging:
       file:
         name: log/FinTrack.log
@@ -34,4 +33,4 @@ spring:
           file-name-pattern: log/FinTrack-%d{yyyy-MM-dd}.log
           max-history: 30
 server:
-  port: 8082
+  port: 8083
