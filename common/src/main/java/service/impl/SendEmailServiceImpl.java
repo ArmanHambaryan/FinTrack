@@ -1,18 +1,24 @@
 package service.impl;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 import service.SendEmailService;
+
+import java.util.Locale;
+
 @Service
 @RequiredArgsConstructor
 public class SendEmailServiceImpl implements SendEmailService {
     private final JavaMailSender mailSender;
-
+    private final TemplateEngine templateEngine;
     @Async
     @Override
     public void sendEmail(String to, String subject, String content) {
@@ -22,6 +28,7 @@ public class SendEmailServiceImpl implements SendEmailService {
         message.setText(content);
         mailSender.send(message);
 
-
     }
+
 }
+

@@ -1,5 +1,6 @@
 package com.example.app.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -11,7 +12,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import service.CustomUserDetailsService;
 
 @Configuration
+@RequiredArgsConstructor
 public class WebSecurityConfig {
+
+    private final LoginSuccessHandler loginSuccessHandler;
+    private final LoginFailureHandler loginFailureHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -30,27 +35,23 @@ public class WebSecurityConfig {
                                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                                 .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
                                 .anyRequest().authenticated()
-
                 )
                 .formLogin(form ->
                         form
                                 .loginPage("/loginPage")
                                 .loginProcessingUrl("/login")
-                                .failureUrl("/loginPage?error")
-                                .defaultSuccessUrl("/successLogin", true)
+                                .successHandler(loginSuccessHandler)
+                                .failureHandler(loginFailureHandler)
                                 .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .permitAll()
                         .logoutSuccessUrl("/loginPage")
-
-
                 );
 
         return http.build();
     }
-
 
     @Bean
     DaoAuthenticationProvider authenticationProvider(CustomUserDetailsService uds, PasswordEncoder encoder) {
@@ -59,11 +60,4 @@ public class WebSecurityConfig {
         provider.setPasswordEncoder(encoder);
         return provider;
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-
 }

@@ -48,7 +48,11 @@ public class User {
         if (role == null) {
             role = UserRole.USER;
         }
+
     }
+    private boolean is_blocked;
+    private LocalDateTime blocked_until;
+    private int login_attempts;
 
     @PreUpdate
     public void preUpdate() {

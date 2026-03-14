@@ -20,4 +20,11 @@ public interface UserService {
     void deleteById(Integer id);
 
     void register(User user);
+
+    void block(Integer id, int hours);
+
+    void incrementLoginAttempts(Integer id);
+
+    void resetLoginAttempts(Integer id);
+
 }
