@@ -25,9 +25,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(User user) {
-        if (user.getUsername().contains("@")){
-            sendEmailService.sendEmail(user.getUsername(),"Welcome to our platform",
-                    "You have successfully registered. please login http://localhost:8081/loginPage");
+        if (user.getEmail().contains("@")){
+            sendEmailService.sendEmail(user.getEmail(),"Welcome to our platform",
+                    "You have successfully registered. please login http://localhost:8083/loginPage");
         }
 
         return userRepository.save(user);
