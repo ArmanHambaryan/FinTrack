@@ -1,0 +1,37 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: javaai2026@gmail.com
+    password: xqgu riev zykv wwew
+  properties:
+    mail:
+      smtp:
+        auth: true
+        starttls:
+          enable: true
+  liquibase:
+    enabled: true
+    change-log: classpath:db/master.xml
+  application:
+    name: app
+  datasource:
+    url: jdbc:mysql://localhost:3306/fin_track
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+
+
+    logging:
+      file:
+        name: log/FinTrack.log
+      logback:
+        rollingpolicy:
+          file-name-pattern: log/FinTrack-%d{yyyy-MM-dd}.log
+          max-history: 30
+server:
+  port: 8082

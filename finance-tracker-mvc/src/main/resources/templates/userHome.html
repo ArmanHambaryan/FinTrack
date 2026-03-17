@@ -58,6 +58,21 @@
             <span th:text="${goal.name}">Goal name</span>
             <span th:text="${goal.target_amount}">0</span>
           </li>
+          <div th:each="goal : ${goals}">
+
+            <h3 th:text="${goal.name}"></h3>
+
+            <p>
+              <span th:text="${goal.savedAmount}"></span> /
+              <span th:text="${goal.targetAmount}"></span>
+            </p>
+
+            <progress
+                    th:value="${goal.savedAmount}"
+                    th:max="${goal.targetAmount}">
+            </progress>
+
+          </div>
         </ul>
         <form class="logout-form" th:action="@{/logout}" method="post">
           <button class="btn btn-ghost" type="submit">Logout</button>

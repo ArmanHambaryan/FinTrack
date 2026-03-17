@@ -29,6 +29,7 @@ public class WebSecurityConfig {
                                         "/loginPage",
                                         "/registerPage",
                                         "/register",
+                                        "/forgotPassword",
                                         "/css/**",
                                         "/js/**",
                                         "/images/**").permitAll()

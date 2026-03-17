@@ -5,6 +5,7 @@ import model.Goal;
 import model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import service.GoalService;
 import service.UserService;
@@ -30,6 +31,13 @@ public class GoalController {
         }
 
         return "redirect:/user/home";
+    }
+
+    @GetMapping("/goals")
+    public String goals(ModelMap modelMap) {
+        List<Goal> goals =goalService.getAllGoals();
+        modelMap.addAttribute("goals", goals);
+        return "goals";
     }
 
 }

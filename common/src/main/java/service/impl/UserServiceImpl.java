@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
         if (user.getEmail().contains("@")){
             sendEmailService.sendEmail(user.getEmail(),"Welcome to our platform",
-                    "You have successfully registered. please login http://localhost:8083/loginPage");
+                    "You have successfully registered. please login http://localhost:8082/loginPage");
         }
 
         return userRepository.save(user);

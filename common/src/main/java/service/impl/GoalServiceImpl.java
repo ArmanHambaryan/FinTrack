@@ -49,4 +49,9 @@ public class GoalServiceImpl implements GoalService {
     public List<Goal> findByUserId(Integer userId) {
         return goalRepository.findByUserId(userId);
     }
+
+    @Override
+    public int calculateProgress(Goal goal) {
+        return (int) (goal.getSaved_amount() / goal.getTarget_amount());
+    }
 }
