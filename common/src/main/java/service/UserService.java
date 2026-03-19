@@ -20,4 +20,10 @@ public interface UserService {
     void deleteById(Integer id);
 
     void register(User user);
+
+    void blockUser(Integer userId);
+
+    void unblockUser(Integer userId);
+
+    void updateLastActive(String email);
 }

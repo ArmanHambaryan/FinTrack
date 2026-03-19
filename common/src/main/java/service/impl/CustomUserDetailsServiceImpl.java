@@ -2,6 +2,7 @@ package service.impl;
 
 import lombok.RequiredArgsConstructor;
 import model.User;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,6 +23,10 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
         User user = userService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (user.isBlocked()) {
+            throw new DisabledException("User is blocked");
+        }
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),

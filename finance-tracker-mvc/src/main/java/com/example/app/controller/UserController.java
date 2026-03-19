@@ -33,12 +33,6 @@ public class UserController {
         return "userHome";
     }
 
-    @GetMapping("/admin/home")
-    public String adminHome() {
-        return "adminHome";
-    }
-
-
     @GetMapping("/users/delete/{id}")
     public String deleteUserById(@PathVariable int id) {
         userService.deleteById(id);

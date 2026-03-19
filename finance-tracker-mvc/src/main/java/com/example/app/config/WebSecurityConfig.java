@@ -3,9 +3,9 @@ package com.example.app.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import service.CustomUserDetailsService;
@@ -36,7 +36,13 @@ public class WebSecurityConfig {
                         form
                                 .loginPage("/loginPage")
                                 .loginProcessingUrl("/login")
-                                .failureUrl("/loginPage?error")
+                                .failureHandler((request, response, exception) -> {
+                                    if (exception instanceof DisabledException) {
+                                        response.sendRedirect("/loginPage?blocked");
+                                    } else {
+                                        response.sendRedirect("/loginPage?error");
+                                    }
+                                })
                                 .defaultSuccessUrl("/successLogin", true)
                                 .permitAll()
                 )
@@ -59,11 +65,5 @@ public class WebSecurityConfig {
         provider.setPasswordEncoder(encoder);
         return provider;
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 
 }
