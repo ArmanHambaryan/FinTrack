@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import repository.UserRepository;
 import service.UserService;
+import org.springframework.web.bind.annotation.RequestMapping;
+import repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +26,9 @@ public class AdminController {
     public AdminController(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
         this.userService = userService;
+
+    public AdminController(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/home")

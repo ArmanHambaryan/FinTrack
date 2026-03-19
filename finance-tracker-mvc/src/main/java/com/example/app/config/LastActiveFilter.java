@@ -8,7 +8,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+https://github.com/ArmanHambaryan/FinTrack/pull/13/conflict?name=finance-tracker-mvc%252Fsrc%252Fmain%252Fjava%252Fcom%252Fexample%252Fapp%252Fconfig%252FLastActiveFilter.java&base_oid=d4a6a2524f9492ce5ecd9fc99a3544e515597261&head_oid=7c74f4a662b09e1142201bd95b7b04e6586c84b1import org.springframework.web.filter.OncePerRequestFilter;
 import service.UserService;
 
 import java.io.IOException;
@@ -37,4 +37,5 @@ public class LastActiveFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+}
 }
