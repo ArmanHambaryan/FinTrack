@@ -94,6 +94,36 @@
         </table>
       </div>
     </section>
+
+    <section class="card panel" style="margin-top: 24px;">
+      <h2 class="section-title">User management</h2>
+      <p class="muted">Review user status and manage access.</p>
+      <ul class="goals-list">
+        <li class="goal-item" th:if="${#lists.isEmpty(users)}">No users found.</li>
+        <li class="goal-item" th:each="user : ${users}">
+          <div>
+            <div th:text="${user.email}">user@email.com</div>
+            <div>
+              <span th:if="${user.blocked}" style="color:red;">Blocked</span>
+              <span th:if="${!user.blocked}" style="color:green;">Active</span>
+              <span th:if="${user.updated_at != null and user.updated_at.isAfter(onlineCutoff)}" style="color:#4fd1c5; margin-left: 8px;">Online</span>
+              <span th:if="${user.updated_at == null or !user.updated_at.isAfter(onlineCutoff)}" style="color:#b7c3da; margin-left: 8px;">Offline</span>
+              <span th:if="${user.balance > highIncomeThreshold}" style="color:#ffb347; margin-left: 8px;">High income</span>
+            </div>
+            <div class="muted" th:text="'Balance: ' + ${user.balance}">Balance: 0</div>
+          </div>
+          <div class="cta-row">
+            <form th:action="@{/admin/block/{id}(id=${user.id})}" method="post">
+              <button type="submit">Block</button>
+            </form>
+
+            <form th:action="@{/admin/unblock/{id}(id=${user.id})}" method="post">
+              <button type="submit">Unblock</button>
+            </form>
+          </div>
+        </li>
+      </ul>
+    </section>
   </main>
 </body>
 </html>

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,6 +43,14 @@ public class WebSecurityConfig {
                         form
                                 .loginPage("/loginPage")
                                 .loginProcessingUrl("/login")
+                                .failureHandler((request, response, exception) -> {
+                                    if (exception instanceof DisabledException) {
+                                        response.sendRedirect("/loginPage?blocked");
+                                    } else {
+                                        response.sendRedirect("/loginPage?error");
+                                    }
+                                })
+                                .defaultSuccessUrl("/successLogin", true)
                                 .successHandler(loginSuccessHandler)
                                 .failureHandler(loginFailureHandler)
                                 .permitAll()
@@ -62,4 +71,5 @@ public class WebSecurityConfig {
         provider.setPasswordEncoder(encoder);
         return provider;
     }
+
 }

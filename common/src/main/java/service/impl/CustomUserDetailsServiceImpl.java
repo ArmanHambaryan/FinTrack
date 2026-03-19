@@ -2,6 +2,7 @@ package service.impl;
 
 import lombok.RequiredArgsConstructor;
 import model.User;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +28,18 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
                 throw new LockedException("Your account is blocked until " + user.getBlocked_until());
             }
 
+        User user = userService.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (user.isBlocked()) {
+            throw new DisabledException("User is blocked");
+        }
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                List.of(new SimpleGrantedAuthority(user.getRole().name()))
+        );
             return new org.springframework.security.core.userdetails.User(
                     user.getEmail(),
                     user.getPassword(),

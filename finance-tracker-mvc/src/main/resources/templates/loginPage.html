@@ -29,6 +29,7 @@
       <p class="form-subtitle">Sign in to continue building your goals.</p>
       <p class="alert" th:if="${msg}" th:text="${msg}"></p>
       <p class="alert error" th:if="${param.error}">Invalid email or password.</p>
+      <p class="alert error" th:if="${param.blocked}">Your account is blocked. Please contact admin.</p>
       <form class="form-grid" th:action="@{/login}" method="post">
         <label class="input-group">
           <span>Email</span>

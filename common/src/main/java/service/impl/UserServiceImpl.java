@@ -63,7 +63,31 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
+    @Override
+    public void blockUser(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
+        user.setBlocked(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void unblockUser(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setBlocked(false);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateLastActive(String email) {
+        userRepository.findByEmail(email).ifPresent(user -> {
+            user.setUpdated_at(LocalDateTime.now());
+            userRepository.save(user);
+        });
+    }
     @Override
     public void block(Integer id, int hours) {
         userRepository.findById(id).ifPresent(user -> {user.set_blocked(true);
