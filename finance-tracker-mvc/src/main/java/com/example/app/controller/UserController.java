@@ -8,10 +8,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import service.BudgetService;
 import service.GoalService;
+import service.TransactionService;
 import service.UserService;
 
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,6 +24,8 @@ public class UserController {
 
     private final UserService userService;
     private final GoalService goalService;
+    private final BudgetService budgetService;
+    private final TransactionService transactionService;
 
     @GetMapping("/user/home")
     public String userHome(Model model, Authentication authentication) {
@@ -29,6 +36,31 @@ public class UserController {
         List<Goal> goals = (user == null) ? List.of() : goalService.findByUserId(user.getId());
 
         model.addAttribute("goals", goals);
+        if (user != null) {
+            model.addAttribute("userId", user.getId());
+        }
+
+        Double budget = (user == null) ? 0.0 : budgetService.getCurrentMonthBudget(user.getId());
+        Double expense = (user == null) ? 0.0 : transactionService.getMonthlyExpense(user.getId());
+        if (expense == null) expense = 0.0;
+
+        LocalDate now = LocalDate.now();
+        String periodLabel = now.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH) + " " + now.getYear();
+
+        double percent = 0;
+        String status = "NO_BUDGET";
+        if (budget != null && budget > 0) {
+            percent = (expense / budget) * 100;
+            status = "OK";
+            if (percent >= 100) status = "ALERT";
+            else if (percent >= 80) status = "WARNING";
+        }
+
+        model.addAttribute("budget", budget);
+        model.addAttribute("expense", expense);
+        model.addAttribute("percent", percent);
+        model.addAttribute("status", status);
+        model.addAttribute("periodLabel", periodLabel);
 
         return "userHome";
     }

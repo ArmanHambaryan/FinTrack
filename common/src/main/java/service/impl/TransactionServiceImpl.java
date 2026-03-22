@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import repository.TransactionRepository;
 import service.TransactionService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -53,5 +54,13 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setType("EXPENSE");
         transaction.setCreated_at(LocalDateTime.now());
         transactionRepository.save(transaction);
+    }
+
+    @Override
+    public Double getMonthlyExpense(Integer userId) {
+        LocalDate now = LocalDate.now();
+        LocalDateTime start = now.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime end = now.withDayOfMonth(now.lengthOfMonth()).atTime(23, 59, 59);
+        return transactionRepository.sumMonthlyExpense(userId, start, end);
     }
 }
