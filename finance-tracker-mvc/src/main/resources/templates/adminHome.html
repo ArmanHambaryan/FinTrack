@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Home</title>
+  <title>Admin Panel</title>
   <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body class="page">
@@ -16,24 +16,113 @@
         <span>Finance Tracker</span>
       </div>
       <nav class="nav-links">
-        <span class="pill">Admin</span>
-        <a href="/transaction">
-          <button class="btn btn-secondary" type="button">Add Transaction</button>
-        </a>
+        <a class="pill" th:href="@{/admin/home}">Admin Home</a>
+        <a class="pill" th:href="@{/transaction}">Transactions</a>
       </nav>
     </header>
 
-    <section class="card panel center">
-      <h1 class="section-title">Admin control room</h1>
-      <p class="muted">Manage users, review goals, and keep the system healthy.</p>
-      <div class="cta-row" style="justify-content: center; margin-top: 20px;">
-        <span class="pill">Users</span>
-        <span class="pill">Reports</span>
-        <span class="pill">Settings</span>
+    <section class="card panel">
+      <h1 class="section-title">All Users</h1>
+      <p class="muted">Manage registered accounts and roles.</p>
+
+      <div style="overflow-x: auto; margin-top: 16px;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Income</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:if="${#lists.isEmpty(users)}">
+              <td colspan="5" class="muted">No users found.</td>
+            </tr>
+            <tr th:each="user : ${users}">
+              <td th:text="${user.username}">Name</td>
+              <td th:text="${user.email}">Email</td>
+              <td th:text="${user.balance}">Income</td>
+              <td th:text="${user.role}">USER</td>
+              <td>
+                <span class="status"
+                      th:classappend="${user.lastActive != null and user.lastActive.isAfter(onlineCutoff)} ? ' online' : ' offline'"
+                      th:text="${user.lastActive != null and user.lastActive.isAfter(onlineCutoff)} ? 'Online' : 'Offline'">
+                  Offline
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <form class="logout-form" th:action="@{/logout}" method="post">
-        <button class="btn btn-ghost" type="submit">Logout</button>
-      </form>
+    </section>
+
+    <section class="card panel" style="margin-top: 24px;">
+      <h2 class="section-title">High Income Users</h2>
+      <p class="muted">Users with income above <span th:text="${highIncomeThreshold}">300000</span>.</p>
+
+      <div style="overflow-x: auto; margin-top: 16px;">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Income</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:if="${#lists.isEmpty(highIncomeUsers)}">
+              <td colspan="5" class="muted">No high income users found.</td>
+            </tr>
+            <tr th:each="user : ${highIncomeUsers}">
+              <td th:text="${user.username}">Name</td>
+              <td th:text="${user.email}">Email</td>
+              <td th:text="${user.balance}">Income</td>
+              <td th:text="${user.role}">USER</td>
+              <td>
+                <span class="status"
+                      th:classappend="${user.lastActive != null and user.lastActive.isAfter(onlineCutoff)} ? ' online' : ' offline'"
+                      th:text="${user.lastActive != null and user.lastActive.isAfter(onlineCutoff)} ? 'Online' : 'Offline'">
+                  Offline
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card panel" style="margin-top: 24px;">
+      <h2 class="section-title">User management</h2>
+      <p class="muted">Review user status and manage access.</p>
+      <ul class="goals-list">
+        <li class="goal-item" th:if="${#lists.isEmpty(users)}">No users found.</li>
+        <li class="goal-item" th:each="user : ${users}">
+          <div>
+            <div th:text="${user.email}">user@email.com</div>
+            <div>
+              <span th:if="${user.blocked}" style="color:red;">Blocked</span>
+              <span th:if="${!user.blocked}" style="color:green;">Active</span>
+              <span th:if="${user.updated_at != null and user.updated_at.isAfter(onlineCutoff)}" style="color:#4fd1c5; margin-left: 8px;">Online</span>
+              <span th:if="${user.updated_at == null or !user.updated_at.isAfter(onlineCutoff)}" style="color:#b7c3da; margin-left: 8px;">Offline</span>
+              <span th:if="${user.balance > highIncomeThreshold}" style="color:#ffb347; margin-left: 8px;">High income</span>
+            </div>
+            <div class="muted" th:text="'Balance: ' + ${user.balance}">Balance: 0</div>
+          </div>
+          <div class="cta-row">
+            <form th:action="@{/admin/block/{id}(id=${user.id})}" method="post">
+              <button type="submit">Block</button>
+            </form>
+
+            <form th:action="@{/admin/unblock/{id}(id=${user.id})}" method="post">
+              <button type="submit">Unblock</button>
+            </form>
+          </div>
+        </li>
+      </ul>
     </section>
   </main>
 </body>
