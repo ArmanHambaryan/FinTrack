@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
@@ -17,8 +17,12 @@
       </div>
       <nav class="nav-links">
         <a class="pill" th:href="@{/registerPage}">Create account</a>
+        <a class="pill" th:href="@{/forgotPassword}">Forgot Password?</a>
       </nav>
     </header>
+    <p th:if="${param.blocked}" style="color:red;">
+      Your account is blocked. Please try again later.
+    </p>
 
     <section class="card form-card">
       <h1 class="form-title">Welcome back</h1>

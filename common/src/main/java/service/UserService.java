@@ -26,4 +26,10 @@ public interface UserService {
     void unblockUser(Integer userId);
 
     void updateLastActive(String email);
+    void block(Integer id, int hours);
+
+    void incrementLoginAttempts(Integer id);
+
+    void resetLoginAttempts(Integer id);
+
 }

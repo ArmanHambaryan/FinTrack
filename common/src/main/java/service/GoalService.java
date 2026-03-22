@@ -19,4 +19,6 @@ public interface GoalService {
         void deleteGoal(Integer id);
 
         List<Goal> findByUserId(Integer userId);
+
+        int calculateProgress(Goal goal);
     }
