@@ -19,20 +19,19 @@ import java.util.List;
 public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
 
     private final UserService userService;
-        @Override
-        public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-            User user = userService.findByEmail(email)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-            if (user.is_blocked() && user.getBlocked_until().isAfter(LocalDateTime.now())) {
-                throw new LockedException("Your account is blocked until " + user.getBlocked_until());
-            }
-
-        User users = userService.findByEmail(email)
-        User user1 = userService.findByEmail(email)
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        if (user.isBlocked()) {
+        if (user.is_blocked()
+                && user.getBlocked_until() != null
+                && user.getBlocked_until().isAfter(LocalDateTime.now())) {
+            throw new LockedException("Your account is blocked until " + user.getBlocked_until());
+        }
+
+        if (user.is_blocked()) {
             throw new DisabledException("User is blocked");
         }
 
@@ -41,7 +40,6 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
                 user.getPassword(),
                 List.of(new SimpleGrantedAuthority(user.getRole().name()))
         );
-
-        }
     }
+}
 
