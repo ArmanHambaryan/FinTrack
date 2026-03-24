@@ -35,33 +35,18 @@ public class Goal {
     private double target_amount;
     private double saved_amount;
     private LocalDate deadline;
-
-    private String name;
-
-    @Column(name = "target_amount")
-    private double targetAmount;
-
-    @Column(name = "saved_amount")
-    private double savedAmount;
-
-    private LocalDate deadline;
-
     private String status;
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
 
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
-        if (createdAt == null) {
-            createdAt = now;
+        if (created_at == null) {
+            created_at = now;
         }
-        if (updatedAt == null) {
-            updatedAt = now;
+        if (updated_at == null) {
+            updated_at = now;
         }
         if (status == null) {
             status = "ACTIVE";
@@ -77,14 +62,12 @@ public class Goal {
         }
         if (saved_amount == 0) {
             saved_amount = 0.0;
-        if (savedAmount == 0) {
-            savedAmount = 0.0;
         }
     }
 
     @PreUpdate
     public void preUpdate() {
-        updatedAt = LocalDateTime.now();
+        updated_at = LocalDateTime.now();
     }
 }
 

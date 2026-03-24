@@ -43,8 +43,6 @@ public class GoalServiceImpl implements GoalService {
             existingGoal.setExchange_rate(goal.getExchange_rate());
             existingGoal.setTarget_amount(goal.getTarget_amount());
             existingGoal.setSaved_amount(goal.getSaved_amount());
-            existingGoal.setTargetAmount(goal.getTargetAmount());
-            existingGoal.setSavedAmount(goal.getSavedAmount());
             existingGoal.setDeadline(goal.getDeadline());
             existingGoal.setStatus(goal.getStatus());
 
@@ -65,7 +63,7 @@ public class GoalServiceImpl implements GoalService {
 
     @Override
     public int calculateProgress(Goal goal) {
-        return (int) (goal.getSavedAmount() / goal.getTargetAmount());
+        return (int) (goal.getSaved_amount() / goal.getTarget_amount());
     }
 
     private void enrichGoalCurrency(Goal goal) {

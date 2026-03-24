@@ -11,13 +11,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import repository.UserRepository;
 import service.UserService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Controller
 @RequiredArgsConstructor
@@ -26,12 +23,6 @@ public class AdminController {
 
     private final UserRepository userRepository;
     private final UserService userService;
-
-    public AdminController(UserRepository userRepository, UserService userService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-    }
-
 
     @GetMapping("/home")
     public String adminHome(Model model) {
