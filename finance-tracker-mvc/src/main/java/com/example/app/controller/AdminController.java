@@ -1,6 +1,7 @@
 package com.example.app.controller;
 
 
+import lombok.RequiredArgsConstructor;
 import model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,19 +18,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
 
     private final UserRepository userRepository;
     private final UserService userService;
 
-    public AdminController(UserRepository userRepository, UserService userService) {
-        this.userRepository = userRepository;
-        this.userService = userService;
-
-    public AdminController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @GetMapping("/home")
     public String adminHome(Model model) {
