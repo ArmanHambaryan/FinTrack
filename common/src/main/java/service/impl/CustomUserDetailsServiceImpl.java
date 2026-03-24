@@ -28,7 +28,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
                 throw new LockedException("Your account is blocked until " + user.getBlocked_until());
             }
 
-        User user = userService.findByEmail(email)
+        User user1 = userService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (user.isBlocked()) {
@@ -40,11 +40,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
                 user.getPassword(),
                 List.of(new SimpleGrantedAuthority(user.getRole().name()))
         );
-            return new org.springframework.security.core.userdetails.User(
-                    user.getEmail(),
-                    user.getPassword(),
-                    List.of(new SimpleGrantedAuthority(user.getRole().name()))
-            );
+
         }
     }
 

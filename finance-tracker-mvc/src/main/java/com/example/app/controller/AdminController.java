@@ -16,6 +16,8 @@ import repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -26,10 +28,8 @@ public class AdminController {
     public AdminController(UserRepository userRepository, UserService userService) {
         this.userRepository = userRepository;
         this.userService = userService;
-
-    public AdminController(UserRepository userRepository) {
-        this.userRepository = userRepository;
     }
+
 
     @GetMapping("/home")
     public String adminHome(Model model) {
@@ -55,3 +55,4 @@ public class AdminController {
         return "redirect:/admin/home";
     }
 }
+

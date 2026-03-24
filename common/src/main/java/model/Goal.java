@@ -28,34 +28,45 @@ import java.time.LocalDateTime;
 
     @Column(name = "user_id", nullable = false)
     private Integer userId;
-        private String name;
-        private double target_amount;
-        private double saved_amount;
-        private LocalDate deadline;
+
+    private String name;
+
+    @Column(name = "target_amount")
+    private double targetAmount;
+
+    @Column(name = "saved_amount")
+    private double savedAmount;
+
+    private LocalDate deadline;
+
     private String status;
-    private LocalDateTime created_at;
-    private LocalDateTime updated_at;
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
-        if (created_at == null) {
-            created_at = now;
+        if (createdAt == null) {
+            createdAt = now;
         }
-        if (updated_at == null) {
-            updated_at = now;
+        if (updatedAt == null) {
+            updatedAt = now;
         }
         if (status == null) {
             status = "ACTIVE";
         }
-        if (saved_amount == 0) {
-            saved_amount = 0.0;
+        if (savedAmount == 0) {
+            savedAmount = 0.0;
         }
     }
 
     @PreUpdate
     public void preUpdate() {
-        updated_at = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
     }
     }
 
