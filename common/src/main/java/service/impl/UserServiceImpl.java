@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 public class UserServiceImpl implements UserService {
 
 
+
     private final SendEmailService sendEmailService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -27,6 +28,8 @@ public class UserServiceImpl implements UserService {
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
+
 
     @Override
     public User save(User user) {
@@ -115,6 +118,5 @@ public class UserServiceImpl implements UserService {
 
             });
     }
-
 
 }

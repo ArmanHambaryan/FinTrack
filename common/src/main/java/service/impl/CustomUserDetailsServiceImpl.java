@@ -29,6 +29,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
             }
 
         User users = userService.findByEmail(email)
+        User user1 = userService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (user.isBlocked()) {

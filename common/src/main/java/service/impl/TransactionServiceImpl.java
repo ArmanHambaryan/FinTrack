@@ -83,6 +83,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void applyBalanceChange(Transaction transaction, boolean isIncome) {
+    private void applyBalanceChange (Transaction transaction,boolean isIncome){
         if (transaction.getUserId() == null) {
             return;
         }
@@ -120,4 +121,5 @@ public class TransactionServiceImpl implements TransactionService {
         }
         return currencyCode.trim().toUpperCase(Locale.ROOT);
     }
+}
 }
