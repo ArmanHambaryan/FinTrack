@@ -4,14 +4,20 @@ import lombok.RequiredArgsConstructor;
 import model.Goal;
 import org.springframework.stereotype.Service;
 import repository.GoalRepository;
+import service.CurrencyRateService;
 import service.GoalService;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
 public class GoalServiceImpl implements GoalService {
     private final GoalRepository goalRepository;
+    private final CurrencyRateService currencyRateService;
 
 
     public List<Goal> getAllGoals() {
@@ -23,6 +29,7 @@ public class GoalServiceImpl implements GoalService {
     }
 
     public Goal createGoal(Goal goal) {
+        enrichGoalCurrency(goal);
         return goalRepository.save(goal);
     }
 
@@ -31,11 +38,17 @@ public class GoalServiceImpl implements GoalService {
 
         if (existingGoal != null) {
             existingGoal.setName(goal.getName());
+            existingGoal.setCurrency_code(normalizeCurrency(goal.getCurrency_code()));
+            existingGoal.setOriginal_target_amount(goal.getOriginal_target_amount());
+            existingGoal.setExchange_rate(goal.getExchange_rate());
+            existingGoal.setTarget_amount(goal.getTarget_amount());
+            existingGoal.setSaved_amount(goal.getSaved_amount());
             existingGoal.setTargetAmount(goal.getTargetAmount());
             existingGoal.setSavedAmount(goal.getSavedAmount());
             existingGoal.setDeadline(goal.getDeadline());
             existingGoal.setStatus(goal.getStatus());
 
+            enrichGoalCurrency(existingGoal);
             return goalRepository.save(existingGoal);
         }
 
@@ -53,5 +66,28 @@ public class GoalServiceImpl implements GoalService {
     @Override
     public int calculateProgress(Goal goal) {
         return (int) (goal.getSavedAmount() / goal.getTargetAmount());
+    }
+
+    private void enrichGoalCurrency(Goal goal) {
+        String currencyCode = normalizeCurrency(goal.getCurrency_code());
+        BigDecimal originalAmount = BigDecimal.valueOf(goal.getTarget_amount());
+        if (goal.getOriginal_target_amount() != null && goal.getOriginal_target_amount() > 0) {
+            originalAmount = BigDecimal.valueOf(goal.getOriginal_target_amount());
+        }
+
+        BigDecimal rate = currencyRateService.getRateToAmd(currencyCode, LocalDate.now());
+        BigDecimal convertedAmount = originalAmount.multiply(rate).setScale(2, RoundingMode.HALF_UP);
+
+        goal.setCurrency_code(currencyCode);
+        goal.setOriginal_target_amount(originalAmount.doubleValue());
+        goal.setExchange_rate(rate.doubleValue());
+        goal.setTarget_amount(convertedAmount.doubleValue());
+    }
+
+    private String normalizeCurrency(String currencyCode) {
+        if (currencyCode == null || currencyCode.isBlank()) {
+            return "AMD";
+        }
+        return currencyCode.trim().toUpperCase(Locale.ROOT);
     }
 }

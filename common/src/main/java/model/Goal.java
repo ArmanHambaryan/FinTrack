@@ -1,10 +1,10 @@
 package model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Column;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-    @Table(name = "user_goals")
-    public class Goal {
+@Table(name = "user_goals")
+public class Goal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +28,13 @@ import java.time.LocalDateTime;
 
     @Column(name = "user_id", nullable = false)
     private Integer userId;
+    private String name;
+    private String currency_code;
+    private Double original_target_amount;
+    private Double exchange_rate;
+    private double target_amount;
+    private double saved_amount;
+    private LocalDate deadline;
 
     private String name;
 
@@ -59,6 +66,17 @@ import java.time.LocalDateTime;
         if (status == null) {
             status = "ACTIVE";
         }
+        if (currency_code == null || currency_code.isBlank()) {
+            currency_code = "AMD";
+        }
+        if (original_target_amount == null) {
+            original_target_amount = target_amount;
+        }
+        if (exchange_rate == null || exchange_rate <= 0) {
+            exchange_rate = 1.0;
+        }
+        if (saved_amount == 0) {
+            saved_amount = 0.0;
         if (savedAmount == 0) {
             savedAmount = 0.0;
         }
@@ -68,5 +86,5 @@ import java.time.LocalDateTime;
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
     }
-    }
+}
 

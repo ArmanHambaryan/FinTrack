@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="6-add-goal-currency-columns" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="user_goals"/>
+        </preConditions>
+
+        <addColumn tableName="user_goals">
+            <column name="currency_code" type="VARCHAR(10)" defaultValue="AMD"/>
+            <column name="original_target_amount" type="DECIMAL(15,2)"/>
+            <column name="exchange_rate" type="DECIMAL(15,6)" defaultValueNumeric="1.000000"/>
+        </addColumn>
+
+        <update tableName="user_goals">
+            <column name="currency_code" value="AMD"/>
+            <column name="original_target_amount" valueComputed="target_amount"/>
+            <column name="exchange_rate" valueNumeric="1"/>
+        </update>
+
+        <addNotNullConstraint tableName="user_goals" columnName="currency_code" columnDataType="VARCHAR(10)"/>
+        <addNotNullConstraint tableName="user_goals" columnName="original_target_amount" columnDataType="DECIMAL(15,2)"/>
+        <addNotNullConstraint tableName="user_goals" columnName="exchange_rate" columnDataType="DECIMAL(15,6)"/>
+    </changeSet>
+
+    <changeSet id="6-add-transaction-currency-columns" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="transactions"/>
+        </preConditions>
+
+        <addColumn tableName="transactions">
+            <column name="original_amount" type="DECIMAL(15,2)"/>
+            <column name="currency_code" type="VARCHAR(10)" defaultValue="AMD"/>
+            <column name="exchange_rate" type="DECIMAL(15,6)" defaultValueNumeric="1.000000"/>
+        </addColumn>
+
+        <update tableName="transactions">
+            <column name="original_amount" valueComputed="amount"/>
+            <column name="currency_code" value="AMD"/>
+            <column name="exchange_rate" valueNumeric="1"/>
+        </update>
+
+        <addNotNullConstraint tableName="transactions" columnName="original_amount" columnDataType="DECIMAL(15,2)"/>
+        <addNotNullConstraint tableName="transactions" columnName="currency_code" columnDataType="VARCHAR(10)"/>
+        <addNotNullConstraint tableName="transactions" columnName="exchange_rate" columnDataType="DECIMAL(15,6)"/>
+    </changeSet>
+
+</databaseChangeLog>

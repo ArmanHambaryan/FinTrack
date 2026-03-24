@@ -1,6 +1,7 @@
 package com.example.app.controller;
 
 
+import lombok.RequiredArgsConstructor;
 import model.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import java.util.List;
 import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/admin")
 public class AdminController {
 

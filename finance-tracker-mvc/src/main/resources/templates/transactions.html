@@ -28,7 +28,16 @@
         <form class="form-grid" action="/transaction/income" method="post" style="margin-top: 16px;">
           <label class="input-group">
             <span>Amount</span>
-            <input class="input" type="number" name="amount" required>
+            <input class="input" type="number" name="amount" min="0" step="0.01" required>
+          </label>
+          <label class="input-group">
+            <span>Currency</span>
+            <select class="input" name="currency_code">
+              <option value="AMD">AMD</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="RUB">RUB</option>
+            </select>
           </label>
           <label class="input-group">
             <span>Description</span>
@@ -48,7 +57,16 @@
         <form class="form-grid" action="/transaction/expense" method="post" style="margin-top: 16px;">
           <label class="input-group">
             <span>Amount</span>
-            <input class="input" type="number" name="amount" required>
+            <input class="input" type="number" name="amount" min="0" step="0.01" required>
+          </label>
+          <label class="input-group">
+            <span>Currency</span>
+            <select class="input" name="currency_code">
+              <option value="AMD">AMD</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+              <option value="RUB">RUB</option>
+            </select>
           </label>
           <label class="input-group">
             <span>Description</span>
@@ -73,17 +91,19 @@
             <tr>
               <th>Type</th>
               <th>Amount</th>
+              <th>Original</th>
               <th>Date</th>
               <th>Description</th>
             </tr>
           </thead>
           <tbody>
             <tr th:if="${#lists.isEmpty(transactions)}">
-              <td colspan="4" class="muted">No transactions yet.</td>
+              <td colspan="5" class="muted">No transactions yet.</td>
             </tr>
             <tr th:each="tx : ${transactions}">
               <td th:text="${tx.type}">INCOME</td>
-              <td th:text="${tx.amount}">0</td>
+              <td th:text="${tx.amount + ' AMD'}">0</td>
+              <td th:text="${tx.original_amount + ' ' + tx.currency_code + ' @ ' + tx.exchange_rate}">0</td>
               <td th:text="${#temporals.format(tx.transaction_date, 'yyyy-MM-dd HH:mm')}">2026-03-12 12:00</td>
               <td th:text="${tx.description}">-</td>
             </tr>

@@ -28,6 +28,7 @@ public class CustomUserDetailsServiceImpl implements CustomUserDetailsService {
                 throw new LockedException("Your account is blocked until " + user.getBlocked_until());
             }
 
+        User users = userService.findByEmail(email)
         User user1 = userService.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
