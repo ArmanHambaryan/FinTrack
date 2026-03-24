@@ -17,12 +17,9 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
-
     private final SendEmailService sendEmailService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
 
     @Override
     public List<User> findAll() {
