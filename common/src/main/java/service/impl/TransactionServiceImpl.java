@@ -67,7 +67,9 @@ public class TransactionServiceImpl implements TransactionService {
         LocalDateTime start = now.withDayOfMonth(1).atStartOfDay();
         LocalDateTime end = now.withDayOfMonth(now.lengthOfMonth()).atTime(23, 59, 59);
         return transactionRepository.sumMonthlyExpense(userId, start, end);
-    private void applyBalanceChange(Transaction transaction, boolean isIncome) {
+
+    }
+    private void applyBalanceChange (Transaction transaction,boolean isIncome){
         if (transaction.getUserId() == null) {
             return;
         }
