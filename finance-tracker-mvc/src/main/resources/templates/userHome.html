@@ -79,6 +79,42 @@
         </form>
       </div>
     </section>
+
+    <section class="card panel" style="margin-top: 24px;">
+      <h2 class="section-title">Welcome, User</h2>
+      <form class="form-grid" th:action="@{/budget/set}" method="post" style="margin-bottom: 16px;">
+        <label class="input-group">
+          <span>Set monthly budget</span>
+          <input class="input" type="number" name="amount" min="0" step="0.01" placeholder="1000" required>
+        </label>
+        <input type="hidden" name="userId" th:value="${userId}">
+        <button class="btn btn-primary" type="submit">Save Budget</button>
+      </form>
+      <div class="goals-list">
+        <div class="goal-item">
+          <span th:text="'Budget (' + ${periodLabel} + ')'">Budget</span>
+          <span th:text="${budget}">0</span>
+        </div>
+        <div class="goal-item">
+          <span th:text="'Expense (' + ${periodLabel} + ')'">Expense</span>
+          <span th:text="${expense}">0</span>
+        </div>
+        <div class="goal-item">
+          <span th:text="'Usage (' + ${periodLabel} + ')'">Usage</span>
+          <span th:if="${status != 'NO_BUDGET'}"><span th:text="${#numbers.formatDecimal(percent,1,1)}">0</span>%</span>
+          <span th:if="${status == 'NO_BUDGET'}">Set budget</span>
+        </div>
+      </div>
+
+      <p class="alert" th:if="${status == 'NO_BUDGET'}">Set a budget to see your usage percentage.</p>
+      <p class="alert" th:if="${status == 'WARNING'}">Approaching budget limit</p>
+      <p class="alert error" th:if="${status == 'ALERT'}">Budget exceeded</p>
+
+      <h3 class="section-title" style="margin-top: 18px;">Your Goals</h3>
+      <ul class="goals-list">
+        <li class="goal-item" th:each="goal : ${goals}" th:text="${goal.name}">Goal name</li>
+      </ul>
+    </section>
   </main>
 </body>
 </html>

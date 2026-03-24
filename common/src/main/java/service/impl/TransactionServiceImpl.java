@@ -9,6 +9,7 @@ import repository.TransactionRepository;
 import repository.UserRepository;
 import service.TransactionService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -60,6 +61,12 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.save(transaction);
     }
 
+    @Override
+    public Double getMonthlyExpense(Integer userId) {
+        LocalDate now = LocalDate.now();
+        LocalDateTime start = now.withDayOfMonth(1).atStartOfDay();
+        LocalDateTime end = now.withDayOfMonth(now.lengthOfMonth()).atTime(23, 59, 59);
+        return transactionRepository.sumMonthlyExpense(userId, start, end);
     private void applyBalanceChange(Transaction transaction, boolean isIncome) {
         if (transaction.getUserId() == null) {
             return;

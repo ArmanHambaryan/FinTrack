@@ -19,4 +19,6 @@ public interface TransactionService {
 
     void addExpense(Transaction transaction);
 
+    Double getMonthlyExpense(Integer userId);
+
 }
