@@ -56,6 +56,21 @@
           </tbody>
         </table>
       </div>
+
+      <div class="cta-row" style="margin-top: 16px;" th:if="${totalPages != null and totalPages > 1}">
+        <a class="pill"
+           th:if="${currentPage > 0}"
+           th:href="@{/admin/home(page=${currentPage - 1})}">Previous</a>
+
+        <span class="pill"
+              th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+              th:text="${pageNumber + 1}"
+              th:style="${pageNumber == currentPage} ? 'font-weight:700; border-color:#4fd1c5;' : ''"></span>
+
+        <a class="pill"
+           th:if="${currentPage < totalPages - 1}"
+           th:href="@{/admin/home(page=${currentPage + 1})}">Next</a>
+      </div>
     </section>
 
     <section class="card panel" style="margin-top: 24px;">
