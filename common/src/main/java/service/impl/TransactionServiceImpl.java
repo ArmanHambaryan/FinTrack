@@ -66,6 +66,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void addExpense(Transaction transaction) {
+        if (transaction.getCategoryId() == null) {
+            throw new IllegalArgumentException("Category is required for expenses.");
+        }
         transaction.setType("EXPENSE");
         transaction.setCreated_at(LocalDateTime.now());
         enrichTransactionCurrency(transaction);

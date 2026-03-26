@@ -21,6 +21,8 @@
       </nav>
     </header>
 
+    <p class="alert error" th:if="${msg}" th:text="${msg}">Error</p>
+
     <section class="split">
       <div class="card panel">
         <h1 class="section-title">Add income</h1>
@@ -69,8 +71,12 @@
             </select>
           </label>
           <label class="input-group">
-            <span>Description</span>
-            <input class="input" type="text" name="description">
+            <span>Category</span>
+            <input class="input" type="text" name="categoryName" list="category-options" required>
+            <datalist id="category-options">
+              <option th:each="category : ${categories}" th:value="${category.name}"></option>
+              <option value="Other"></option>
+            </datalist>
           </label>
           <label class="input-group">
             <span>Date</span>
@@ -92,6 +98,7 @@
               <th>Type</th>
               <th>Amount</th>
               <th>Original</th>
+              <th>Category</th>
               <th>Date</th>
               <th>Description</th>
             </tr>
@@ -104,6 +111,7 @@
               <td th:text="${tx.type}">INCOME</td>
               <td th:text="${tx.amount + ' AMD'}">0</td>
               <td th:text="${tx.original_amount + ' ' + tx.currency_code + ' @ ' + tx.exchange_rate}">0</td>
+              <td th:text="${tx.categoryId != null and categoryNames.containsKey(tx.categoryId) ? categoryNames.get(tx.categoryId) : '-'}">-</td>
               <td th:text="${#temporals.format(tx.transaction_date, 'yyyy-MM-dd HH:mm')}">2026-03-12 12:00</td>
               <td th:text="${tx.description}">-</td>
             </tr>
