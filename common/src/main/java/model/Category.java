@@ -16,43 +16,25 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "transactions")
-public class Transaction {
+@Table(name = "categories")
+public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private Integer userId;
 
-    private Double amount;
-    private Double original_amount;
-    private String currency_code;
-    private Double exchange_rate;
-    private String type;
-    @Column(name = "category_id")
-    private Integer categoryId;
-    private LocalDateTime transaction_date;
-    private String description;
+    @Column(nullable = false)
+    private String name;
+
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 
     @jakarta.persistence.PrePersist
     public void prePersist() {
         LocalDateTime now = LocalDateTime.now();
-        if (transaction_date == null) {
-            transaction_date = now;
-        }
-        if (currency_code == null || currency_code.isBlank()) {
-            currency_code = "AMD";
-        }
-        if (original_amount == null) {
-            original_amount = amount;
-        }
-        if (exchange_rate == null || exchange_rate <= 0) {
-            exchange_rate = 1.0;
-        }
         if (created_at == null) {
             created_at = now;
         }
