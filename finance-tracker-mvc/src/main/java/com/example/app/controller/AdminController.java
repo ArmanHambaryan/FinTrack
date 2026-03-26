@@ -3,11 +3,13 @@ package com.example.app.controller;
 
 import lombok.RequiredArgsConstructor;
 import model.User;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import repository.UserRepository;
 import service.UserService;
@@ -25,11 +27,13 @@ public class AdminController {
     private final UserService userService;
 
     @GetMapping("/home")
-    public String adminHome(Model model) {
-        List<User> users = userRepository.findAll();
+    public String adminHome(@RequestParam(defaultValue = "0") int page, Model model) {
+        Page<User> usersPage = userService.getAllUsers(page);
         double highIncomeThreshold = 300000.0;
         List<User> highIncomeUsers = userRepository.findByBalanceGreaterThan(highIncomeThreshold);
-        model.addAttribute("users", users);
+        model.addAttribute("users", usersPage.getContent());
+        model.addAttribute("currentPage", usersPage.getNumber());
+        model.addAttribute("totalPages", usersPage.getTotalPages());
         model.addAttribute("highIncomeUsers", highIncomeUsers);
         model.addAttribute("highIncomeThreshold", highIncomeThreshold);
         model.addAttribute("onlineCutoff", LocalDateTime.now().minusMinutes(5));

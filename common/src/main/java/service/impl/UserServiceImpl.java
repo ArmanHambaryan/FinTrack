@@ -2,6 +2,10 @@ package service.impl;
 
 import lombok.RequiredArgsConstructor;
 import model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import repository.UserRepository;
@@ -11,7 +15,6 @@ import service.UserService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,8 @@ public class UserServiceImpl implements UserService {
     private final SendEmailService sendEmailService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private static final int PAGE_SIZE = 5;
 
 
     @Override
@@ -35,7 +40,7 @@ public class UserServiceImpl implements UserService {
     public User save(User user) {
         if (user.getEmail().contains("@")){
             sendEmailService.sendEmail(user.getEmail(),"Welcome to our platform",
-                    "You have successfully registered. please login http://localhost:8082/loginPage");
+                    "You have successfully registered. please login http://localhost:8083/loginPage");
         }
 
         return userRepository.save(user);
@@ -118,5 +123,12 @@ public class UserServiceImpl implements UserService {
 
             });
     }
+
+    @Override
+    public Page<User> getAllUsers(int page) {
+        Pageable pageable = PageRequest.of(page, PAGE_SIZE, Sort.by("id").ascending());
+        return userRepository.findAll(pageable);
+    }
+
 
 }
