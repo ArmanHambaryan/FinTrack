@@ -1,5 +1,6 @@
 package service;
 
+import dto.UserDto;
 import model.User;
 import org.springframework.data.domain.Page;
 
@@ -21,6 +22,8 @@ public interface UserService {
     void deleteById(Integer id);
 
     void register(User user);
+
+    void registerUser(UserDto dto);
 
     void blockUser(Integer userId);
 
