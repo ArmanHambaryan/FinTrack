@@ -3,11 +3,16 @@ spring:
     host: smtp.gmail.com
     port: 587
     username: javaai2026@gmail.com
-    password: xqgu riev zykv wwew
+    password: "xqgu riev zykv wwew"
     properties:
       mail:
         smtp:
           auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          ssl:
+            trust: smtp.gmail.com
           starttls:
             enable: true
             required: true
@@ -19,7 +24,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/fin_track
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:2006.Harut}
+    password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true

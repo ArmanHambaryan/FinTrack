@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="7-create-categories-table" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="categories"/>
+            </not>
+        </preConditions>
+        <createTable tableName="categories">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="true"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_categories_user"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="7-seed-default-categories" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="categories"/>
+        </preConditions>
+        <insert tableName="categories">
+            <column name="name" value="Food"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Transport"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Housing"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Utilities"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Entertainment"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Health"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Education"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Shopping"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Travel"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Other"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="7-add-category-to-transactions" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="transactions"/>
+        </preConditions>
+        <addColumn tableName="transactions">
+            <column name="category_id" type="BIGINT"/>
+        </addColumn>
+        <addForeignKeyConstraint baseTableName="transactions"
+                                 baseColumnNames="category_id"
+                                 constraintName="fk_transactions_category"
+                                 referencedTableName="categories"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

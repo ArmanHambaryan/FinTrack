@@ -1,11 +1,11 @@
 package com.example.app.controller;
 
+import dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import model.User;
 import model.UserRole;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,6 @@ import service.UserService;
 public class MainController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
 
 
@@ -69,8 +68,14 @@ public class MainController {
         } else {
             registeredUser.setRole(UserRole.USER);
         }
-        registeredUser.setPassword(passwordEncoder.encode(registeredUser.getPassword()));
-        userService.save(registeredUser);
+
+        UserDto userDto = new UserDto();
+        userDto.setUsername(registeredUser.getUsername());
+        userDto.setEmail(registeredUser.getEmail());
+        userDto.setPassword(registeredUser.getPassword());
+        userDto.setRole(registeredUser.getRole());
+
+        userService.registerUser(userDto);
         return "redirect:/loginPage?msg=Registration successful, pls login!";
     }
 

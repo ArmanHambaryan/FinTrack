@@ -1,6 +1,8 @@
 package service;
 
+import dto.UserDto;
 import model.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +23,8 @@ public interface UserService {
 
     void register(User user);
 
+    void registerUser(UserDto dto);
+
     void blockUser(Integer userId);
 
     void unblockUser(Integer userId);
@@ -31,5 +35,7 @@ public interface UserService {
     void incrementLoginAttempts(Integer id);
 
     void resetLoginAttempts(Integer id);
+
+    Page<User> getAllUsers(int page);
 
 }
