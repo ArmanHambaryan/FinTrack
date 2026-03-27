@@ -1,6 +1,9 @@
 package service.impl;
 
+import dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import mapper.UserMapper;
 import model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -9,7 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import repository.UserRepository;
-import service.SendEmailService;
+import service.INotificationService;
 import service.UserService;
 
 import java.time.LocalDateTime;
@@ -17,14 +20,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
-
-    private final SendEmailService sendEmailService;
+    private final INotificationService notificationService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     private static final int PAGE_SIZE = 5;
 
@@ -35,15 +38,9 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
     @Override
     public User save(User user) {
-        if (user.getEmail().contains("@")){
-            sendEmailService.sendEmail(user.getEmail(),"Welcome to our platform",
-                    "You have successfully registered. please login http://localhost:8083/loginPage");
-        }
-
-        return userRepository.save(user);
+     return  userRepository.save(user);
     }
 
     @Override
@@ -71,6 +68,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
+
     @Override
     public void blockUser(Integer userId) {
         User user = userRepository.findById(userId)
@@ -96,11 +94,14 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
         });
     }
+
     @Override
     public void block(Integer id, int hours) {
-        userRepository.findById(id).ifPresent(user -> {user.set_blocked(true);
+        userRepository.findById(id).ifPresent(user -> {
+            user.set_blocked(true);
             user.setBlocked_until(LocalDateTime.now().plusHours(hours));
-            userRepository.save(user);});
+            userRepository.save(user);
+        });
     }
 
     @Override
@@ -116,12 +117,14 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
         });
     }
-        @Override
-        public void resetLoginAttempts(Integer id) {
-            userRepository.findById(id).ifPresent(user -> {user.setLogin_attempts(0);
-                userRepository.save(user);
 
-            });
+    @Override
+    public void resetLoginAttempts(Integer id) {
+        userRepository.findById(id).ifPresent(user -> {
+            user.setLogin_attempts(0);
+            userRepository.save(user);
+
+        });
     }
 
     @Override
@@ -130,5 +133,18 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll(pageable);
     }
 
+    @Override
+    public void registerUser(UserDto dto) {
+        log.info("Registering user with email: {}", dto.getEmail());
+        User user = userRepository.save(userMapper.toEntity(dto));
+        log.info("User registered successfully with id: {} and email: {}", user.getId(), user.getEmail());
+
+        notificationService.sendEmail(
+                user.getEmail(),
+                "Welcome!",
+                user.getUsername()
+        );
+        log.info("Welcome email triggered for user: {}", user.getEmail());
+    }
 
 }

@@ -1,6 +1,6 @@
 package service;
 
-public interface SendEmailService {
+public interface INotificationService {
 
     void sendEmail(String to, String subject, String content);
 

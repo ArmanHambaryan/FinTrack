@@ -3,32 +3,61 @@ package service.impl;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import service.SendEmailService;
+import service.INotificationService;
 
-import java.util.Locale;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
-public class SendEmailServiceImpl implements SendEmailService {
+public class SendEmailServiceImpl implements INotificationService {
+
     private final JavaMailSender mailSender;
-    private final TemplateEngine templateEngine;
-    @Async
+    private static final String WELCOME_SUBJECT = "Welcome!";
+    private static final String LOGIN_URL = "http://localhost:8083/loginPage";
+
+    @Value("${spring.mail.username}")
+    private String fromEmail;
+
     @Override
     public void sendEmail(String to, String subject, String content) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(content);
-        mailSender.send(message);
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
+            helper.setFrom(fromEmail);
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(buildContent(to, subject, content), true);
+            mailSender.send(mimeMessage);
+            log.info("Email sent to {}", to);
+        } catch (MessagingException e) {
+            log.error("Failed to send email to {}", to, e);
+            throw new RuntimeException("Failed to send email", e);
+        }
+    }
 
+    private String buildContent(String to, String subject, String content) {
+        if (!WELCOME_SUBJECT.equals(subject)) {
+            return content;
+        }
+
+        try (InputStream inputStream = new ClassPathResource("mail/welcome-notification.html").getInputStream()) {
+            String template = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            return template
+                    .replace("{{username}}", content)
+                    .replace("{{email}}", to)
+                    .replace("{{loginUrl}}", LOGIN_URL);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load welcome email template", e);
+        }
     }
 
 }
-
