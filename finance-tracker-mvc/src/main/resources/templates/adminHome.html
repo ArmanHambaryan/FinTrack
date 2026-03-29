@@ -7,6 +7,17 @@
   <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body class="page">
+  <div class="settings">
+    <button class="pill" type="button" data-settings-toggle aria-expanded="false">Settings</button>
+    <div class="settings-panel" data-settings-panel hidden>
+      <button class="pill theme-toggle" type="button" data-theme-toggle aria-pressed="false">
+        <span class="theme-label">Light</span>
+      </button>
+      <form th:action="@{/logout}" method="post">
+        <button class="btn btn-ghost" type="submit">Logout</button>
+      </form>
+    </div>
+  </div>
   <div class="decor decor-1"></div>
   <div class="decor decor-2"></div>
   <main class="shell">
@@ -17,45 +28,38 @@
       </div>
       <nav class="nav-links">
         <a class="pill" th:href="@{/admin/home}">Admin Home</a>
-        <a class="pill" th:href="@{/transaction}">Transactions</a>
       </nav>
     </header>
 
     <section class="card panel">
-      <h1 class="section-title">All Users</h1>
-      <p class="muted">Manage registered accounts and roles.</p>
+      <h2 class="section-title">User management</h2>
+      <p class="muted">Review user status and manage access.</p>
+      <ul class="goals-list">
+        <li class="goal-item" th:if="${#lists.isEmpty(users)}">No users found.</li>
+        <li class="goal-item" th:each="user : ${users}">
+          <div>
+            <div th:text="${user.email}">user@email.com</div>
+            <div>
+              <span class="status offline" th:if="${user.blocked}">Blocked</span>
+              <span class="status online"
+                    th:if="${!user.blocked and user.lastActive != null and user.lastActive.isAfter(onlineCutoff)}">Online</span>
+              <span class="status offline"
+                    th:if="${!user.blocked and (user.lastActive == null or !user.lastActive.isAfter(onlineCutoff))}">Offline</span>
+              <span class="status warning" th:if="${user.balance > highIncomeThreshold}">High income</span>
+            </div>
+            <div class="muted" th:text="'Balance: ' + ${user.balance}">Balance: 0</div>
+          </div>
+          <div class="cta-row">
+            <form th:action="@{/admin/block/{id}(id=${user.id})}" method="post">
+              <button class="btn btn-secondary" type="submit">Block</button>
+            </form>
 
-      <div style="overflow-x: auto; margin-top: 16px;">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Income</th>
-              <th>Role</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:if="${#lists.isEmpty(users)}">
-              <td colspan="5" class="muted">No users found.</td>
-            </tr>
-            <tr th:each="user : ${users}">
-              <td th:text="${user.username}">Name</td>
-              <td th:text="${user.email}">Email</td>
-              <td th:text="${user.balance}">Income</td>
-              <td th:text="${user.role}">USER</td>
-              <td>
-                <span class="status"
-                      th:classappend="${user.lastActive != null and user.lastActive.isAfter(onlineCutoff)} ? ' online' : ' offline'"
-                      th:text="${user.lastActive != null and user.lastActive.isAfter(onlineCutoff)} ? 'Online' : 'Offline'">
-                  Offline
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+            <form th:action="@{/admin/unblock/{id}(id=${user.id})}" method="post">
+              <button class="btn btn-ghost" type="submit">Unblock</button>
+            </form>
+          </div>
+        </li>
+      </ul>
 
       <div class="cta-row" style="margin-top: 16px;" th:if="${totalPages != null and totalPages > 1}">
         <a class="pill"
@@ -72,73 +76,52 @@
            th:href="@{/admin/home(page=${currentPage + 1})}">Next</a>
       </div>
     </section>
-
-    <section class="card panel" style="margin-top: 24px;">
-      <h2 class="section-title">High Income Users</h2>
-      <p class="muted">Users with income above <span th:text="${highIncomeThreshold}">300000</span>.</p>
-
-      <div style="overflow-x: auto; margin-top: 16px;">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Income</th>
-              <th>Role</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr th:if="${#lists.isEmpty(highIncomeUsers)}">
-              <td colspan="5" class="muted">No high income users found.</td>
-            </tr>
-            <tr th:each="user : ${highIncomeUsers}">
-              <td th:text="${user.username}">Name</td>
-              <td th:text="${user.email}">Email</td>
-              <td th:text="${user.balance}">Income</td>
-              <td th:text="${user.role}">USER</td>
-              <td>
-                <span class="status"
-                      th:classappend="${user.lastActive != null and user.lastActive.isAfter(onlineCutoff)} ? ' online' : ' offline'"
-                      th:text="${user.lastActive != null and user.lastActive.isAfter(onlineCutoff)} ? 'Online' : 'Offline'">
-                  Offline
-                </span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <section class="card panel" style="margin-top: 24px;">
-      <h2 class="section-title">User management</h2>
-      <p class="muted">Review user status and manage access.</p>
-      <ul class="goals-list">
-        <li class="goal-item" th:if="${#lists.isEmpty(users)}">No users found.</li>
-        <li class="goal-item" th:each="user : ${users}">
-          <div>
-            <div th:text="${user.email}">user@email.com</div>
-            <div>
-              <span th:if="${user.blocked}" style="color:red;">Blocked</span>
-              <span th:if="${!user.blocked}" style="color:green;">Active</span>
-              <span th:if="${user.updated_at != null and user.updated_at.isAfter(onlineCutoff)}" style="color:#4fd1c5; margin-left: 8px;">Online</span>
-              <span th:if="${user.updated_at == null or !user.updated_at.isAfter(onlineCutoff)}" style="color:#b7c3da; margin-left: 8px;">Offline</span>
-              <span th:if="${user.balance > highIncomeThreshold}" style="color:#ffb347; margin-left: 8px;">High income</span>
-            </div>
-            <div class="muted" th:text="'Balance: ' + ${user.balance}">Balance: 0</div>
-          </div>
-          <div class="cta-row">
-            <form th:action="@{/admin/block/{id}(id=${user.id})}" method="post">
-              <button type="submit">Block</button>
-            </form>
-
-            <form th:action="@{/admin/unblock/{id}(id=${user.id})}" method="post">
-              <button type="submit">Unblock</button>
-            </form>
-          </div>
-        </li>
-      </ul>
-    </section>
   </main>
+  <script>
+    (() => {
+      const settingsToggle = document.querySelector("[data-settings-toggle]");
+      const settingsPanel = document.querySelector("[data-settings-panel]");
+      const toggle = document.querySelector("[data-theme-toggle]");
+      if (!toggle) return;
+      const storageKey = "theme";
+      const root = document.body;
+
+      const applyTheme = (mode) => {
+        const isLight = mode === "light";
+        root.classList.toggle("theme-light", isLight);
+        toggle.setAttribute("aria-pressed", String(isLight));
+        const label = toggle.querySelector(".theme-label");
+        if (label) {
+          label.textContent = isLight ? "Dark" : "Light";
+        }
+      };
+
+      const stored = localStorage.getItem(storageKey);
+      const initial = stored ? stored : "dark";
+      applyTheme(initial);
+
+      if (settingsToggle && settingsPanel) {
+        settingsToggle.addEventListener("click", () => {
+          const isOpen = !settingsPanel.hasAttribute("hidden");
+          settingsPanel.toggleAttribute("hidden", isOpen);
+          settingsToggle.setAttribute("aria-expanded", String(!isOpen));
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!settingsPanel || settingsPanel.hasAttribute("hidden")) return;
+          const target = event.target;
+          if (settingsPanel.contains(target) || settingsToggle.contains(target)) return;
+          settingsPanel.setAttribute("hidden", "");
+          settingsToggle.setAttribute("aria-expanded", "false");
+        });
+      }
+
+      toggle.addEventListener("click", () => {
+        const next = root.classList.contains("theme-light") ? "dark" : "light";
+        localStorage.setItem(storageKey, next);
+        applyTheme(next);
+      });
+    })();
+  </script>
 </body>
 </html>
