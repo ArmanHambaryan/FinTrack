@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateLastActive(String email) {
         userRepository.findByEmail(email).ifPresent(user -> {
-            user.setUpdated_at(LocalDateTime.now());
+            user.setLastActive(LocalDateTime.now());
             userRepository.save(user);
         });
     }

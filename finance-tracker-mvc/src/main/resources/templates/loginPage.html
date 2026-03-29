@@ -15,10 +15,6 @@
         <span class="brand-mark"></span>
         <span>Finance Tracker</span>
       </div>
-      <nav class="nav-links">
-        <a class="pill" th:href="@{/registerPage}">Create account</a>
-        <a class="pill" th:href="@{/forgotPassword}">Forgot Password?</a>
-      </nav>
     </header>
     <p th:if="${param.blocked}" style="color:red;">
       Your account is blocked. Please try again later.
@@ -41,10 +37,20 @@
         </label>
         <button class="btn btn-primary" type="submit">Sign in</button>
       </form>
-      <p class="muted" style="margin-top: 18px;">
-        New here? <a class="pill" th:href="@{/registerPage}">Create account</a>
-      </p>
+      <div class="muted helper-links" style="margin-top: 18px;">
+        <span>New here?</span>
+        <a class="pill" th:href="@{/registerPage}">Create account</a>
+        <a class="pill" th:href="@{/forgotPassword}">Forgot password?</a>
+      </div>
     </section>
   </main>
+  <script>
+    (() => {
+      const storageKey = "theme";
+      const stored = localStorage.getItem(storageKey);
+      const initial = stored ? stored : "dark";
+      document.body.classList.toggle("theme-light", initial === "light");
+    })();
+  </script>
 </body>
 </html>

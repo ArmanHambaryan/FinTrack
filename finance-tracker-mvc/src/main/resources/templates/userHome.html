@@ -7,6 +7,17 @@
   <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body class="page">
+  <div class="settings">
+    <button class="pill" type="button" data-settings-toggle aria-expanded="false">Settings</button>
+    <div class="settings-panel" data-settings-panel hidden>
+      <button class="pill theme-toggle" type="button" data-theme-toggle aria-pressed="false">
+        <span class="theme-label">Light</span>
+      </button>
+      <form th:action="@{/logout}" method="post">
+        <button class="btn btn-ghost" type="submit">Logout</button>
+      </form>
+    </div>
+  </div>
   <div class="decor decor-1"></div>
   <div class="decor decor-2"></div>
   <main class="shell">
@@ -17,9 +28,7 @@
       </div>
       <nav class="nav-links">
         <a class="pill" th:href="@{/user/home}">User Home</a>
-        <a href="/transaction">
-          <button class="btn btn-secondary" type="button">Add Transaction</button>
-        </a>
+        <a class="btn btn-secondary" th:href="@{/transaction}">Add Transaction</a>
       </nav>
     </header>
 
@@ -69,22 +78,6 @@
             <span th:text="${goal.original_target_amount + ' ' + goal.currency_code + ' (' + goal.target_amount + ' AMD)'}">0</span>
             <span th:text="${goal.target_amount}">0</span>
           </li>
-          <div th:each="goal : ${goals}">
-
-            <h3 th:text="${goal.name}"></h3>
-
-            <p>
-              <span th:text="${goal.saved_amount}"></span> /
-              <span th:text="${goal.target_amount + ' AMD'}"></span>
-            </p>
-            <p class="muted" th:text="'Entered: ' + ${goal.original_target_amount} + ' ' + ${goal.currency_code} + ', rate: ' + ${goal.exchange_rate}">Entered amount</p>
-
-            <progress
-                    th:value="${goal.saved_amount}"
-                    th:max="${goal.target_amount}">
-            </progress>
-
-          </div>
         </ul>
         <form class="logout-form" th:action="@{/logout}" method="post">
           <button class="btn btn-ghost" type="submit">Logout</button>
@@ -122,11 +115,53 @@
       <p class="alert" th:if="${status == 'WARNING'}">Approaching budget limit</p>
       <p class="alert error" th:if="${status == 'ALERT'}">Budget exceeded</p>
 
-      <h3 class="section-title" style="margin-top: 18px;">Your Goals</h3>
-      <ul class="goals-list">
-        <li class="goal-item" th:each="goal : ${goals}" th:text="${goal.name}">Goal name</li>
-      </ul>
     </section>
   </main>
+  <script>
+    (() => {
+      const settingsToggle = document.querySelector("[data-settings-toggle]");
+      const settingsPanel = document.querySelector("[data-settings-panel]");
+      const toggle = document.querySelector("[data-theme-toggle]");
+      if (!toggle) return;
+      const storageKey = "theme";
+      const root = document.body;
+
+      const applyTheme = (mode) => {
+        const isLight = mode === "light";
+        root.classList.toggle("theme-light", isLight);
+        toggle.setAttribute("aria-pressed", String(isLight));
+        const label = toggle.querySelector(".theme-label");
+        if (label) {
+          label.textContent = isLight ? "Dark" : "Light";
+        }
+      };
+
+      const stored = localStorage.getItem(storageKey);
+      const initial = stored ? stored : "dark";
+      applyTheme(initial);
+
+      if (settingsToggle && settingsPanel) {
+        settingsToggle.addEventListener("click", () => {
+          const isOpen = !settingsPanel.hasAttribute("hidden");
+          settingsPanel.toggleAttribute("hidden", isOpen);
+          settingsToggle.setAttribute("aria-expanded", String(!isOpen));
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!settingsPanel || settingsPanel.hasAttribute("hidden")) return;
+          const target = event.target;
+          if (settingsPanel.contains(target) || settingsToggle.contains(target)) return;
+          settingsPanel.setAttribute("hidden", "");
+          settingsToggle.setAttribute("aria-expanded", "false");
+        });
+      }
+
+      toggle.addEventListener("click", () => {
+        const next = root.classList.contains("theme-light") ? "dark" : "light";
+        localStorage.setItem(storageKey, next);
+        applyTheme(next);
+      });
+    })();
+  </script>
 </body>
 </html>
