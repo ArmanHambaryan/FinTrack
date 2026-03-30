@@ -62,8 +62,6 @@
             <input class="input" id="goalTargetDate" name="deadline" type="date">
           </label>
 
-          <input type="hidden" name="saved_amount" value="0">
-
           <button class="btn btn-primary" type="submit">Add Goal</button>
         </form>
       </div>
@@ -74,14 +72,77 @@
         <ul class="goals-list">
           <li class="goal-item" th:if="${#lists.isEmpty(goals)}">No goals yet.</li>
           <li class="goal-item" th:each="goal : ${goals}">
-            <span th:text="${goal.name}">Goal name</span>
-            <span th:text="${goal.original_target_amount + ' ' + goal.currency_code + ' (' + goal.target_amount + ' AMD)'}">0</span>
-            <span th:text="${goal.target_amount}">0</span>
+            <div>
+              <div th:text="${goal.name}">Goal name</div>
+              <div class="muted"
+                   th:text="${'Target: ' + #numbers.formatDecimal(goal.original_target_amount, 1, 2) + ' ' + goal.currency_code}">
+                0
+              </div>
+              <div class="muted"
+                   th:text="${'In AMD: ' + #numbers.formatDecimal(goal.target_amount, 1, 2) + ' AMD'}">
+                0
+              </div>
+            </div>
+            <div class="cta-row">
+              <form th:action="@{/goals/delete/{id}(id=${goal.id})}" method="post">
+                <button class="btn btn-primary" type="submit">Delete</button>
+              </form>
+            </div>
           </li>
         </ul>
         <form class="logout-form" th:action="@{/logout}" method="post">
           <button class="btn btn-ghost" type="submit">Logout</button>
         </form>
+      </div>
+    </section>
+
+    <section class="card panel" style="margin-top: 24px;">
+      <h2 class="section-title">Goal Calculator</h2>
+      <p class="muted">Estimate how much you need to save every month to reach your target.</p>
+      <form class="form-grid" th:action="@{/calculator}" method="post" style="margin-top: 16px;">
+        <label class="input-group" for="calculatorTargetAmount">
+          <span>Target amount</span>
+          <input class="input"
+                 id="calculatorTargetAmount"
+                 name="target_amount"
+                 type="number"
+                 min="0.01"
+                 step="0.01"
+                 placeholder="120000"
+                 th:value="${calculatorTargetAmount}"
+                 required>
+        </label>
+        <label class="input-group" for="calculatorMonths">
+          <span>Months</span>
+          <input class="input"
+                 id="calculatorMonths"
+                 name="months"
+                 type="number"
+                 min="1"
+                 placeholder="12"
+                 th:value="${calculatorMonths}"
+                 required>
+        </label>
+        <label class="input-group" for="calculatorCurrencyCode">
+          <span>Currency</span>
+          <select class="input" id="calculatorCurrencyCode" name="currency_code">
+            <option value="AMD" th:selected="${calculatorCurrencyCode == 'AMD'}">AMD</option>
+            <option value="USD" th:selected="${calculatorCurrencyCode == 'USD'}">USD</option>
+            <option value="EUR" th:selected="${calculatorCurrencyCode == 'EUR'}">EUR</option>
+            <option value="RUB" th:selected="${calculatorCurrencyCode == 'RUB'}">RUB</option>
+          </select>
+        </label>
+        <button class="btn btn-primary" type="submit">Calculate</button>
+      </form>
+      <div class="goals-list" th:if="${calculatorResult != null}" style="margin-top: 18px;">
+        <div class="goal-item">
+          <span>Monthly saving</span>
+          <span th:text="${calculatorResult + ' ' + calculatorCurrencyCode}">0</span>
+        </div>
+        <div class="goal-item">
+          <span>Monthly saving in AMD</span>
+          <span th:text="${calculatorResultAmd + ' AMD'}">0</span>
+        </div>
       </div>
     </section>
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="8-add-user-goals-status" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="user_goals"/>
+            <not>
+                <columnExists tableName="user_goals" columnName="status"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="user_goals">
+            <column name="status" type="VARCHAR(20)" defaultValue="ACTIVE">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="8-add-user-goals-months" author="codex">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="user_goals"/>
+            <not>
+                <columnExists tableName="user_goals" columnName="months"/>
+            </not>
+        </preConditions>
+
+        <addColumn tableName="user_goals">
+            <column name="months" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
