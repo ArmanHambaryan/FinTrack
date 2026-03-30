@@ -17,6 +17,7 @@ import service.GoalService;
 import service.TransactionService;
 import service.UserService;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.TextStyle;
 import java.util.List;
@@ -33,7 +34,13 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/user/home")
-    public String userHome(Model model, Authentication authentication) {
+    public String userHome(Model model,
+                           Authentication authentication,
+                           @RequestParam(required = false) BigDecimal calculatorTargetAmount,
+                           @RequestParam(required = false) Integer calculatorMonths,
+                           @RequestParam(required = false) BigDecimal calculatorResult,
+                           @RequestParam(required = false, defaultValue = "AMD") String calculatorCurrencyCode,
+                           @RequestParam(required = false) BigDecimal calculatorResultAmd) {
 
         String username = authentication.getName();
         User user = userService.findByEmail(username).orElse(null);
@@ -66,6 +73,11 @@ public class UserController {
         model.addAttribute("percent", percent);
         model.addAttribute("status", status);
         model.addAttribute("periodLabel", periodLabel);
+        model.addAttribute("calculatorTargetAmount", calculatorTargetAmount);
+        model.addAttribute("calculatorMonths", calculatorMonths);
+        model.addAttribute("calculatorResult", calculatorResult);
+        model.addAttribute("calculatorCurrencyCode", calculatorCurrencyCode);
+        model.addAttribute("calculatorResultAmd", calculatorResultAmd);
 
         return "userHome";
     }
@@ -75,7 +87,7 @@ public class UserController {
         userService.deleteById(id);
         return "redirect:/admin/home";
     }
-    @GetMapping("/forgotPassword") // Փոխեցի, որ համապատասխանի Security-ին
+    @GetMapping("/forgotPassword")
     public String passwordForgetPage() {
         return "forgotPassword";
     }

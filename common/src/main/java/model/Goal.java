@@ -35,6 +35,7 @@ public class Goal {
     private double target_amount;
     private double saved_amount;
     private LocalDate deadline;
+    private int months;
     private String status;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
