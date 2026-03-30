@@ -6,16 +6,20 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="2" author="harut">
+        <validCheckSum>9:a05d55f4a98c7ba806c497b30b20bd66</validCheckSum>
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user_goals"/>
+            </not>
+        </preConditions>
+
         <createTable tableName="user_goals">
             <column name="id" type="BIGINT" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
 
             <column name="user_id" type="BIGINT">
-                <constraints nullable="false"
-                             referencedTableName="users"
-                             referencedColumnNames="id"
-                             foreignKeyName="fk_user_goals_user"/>
+                <constraints nullable="false"/>
             </column>
 
             <column name="name" type="VARCHAR(255)">
@@ -36,11 +40,22 @@
                 <constraints nullable="false"/>
             </column>
 
+            <column name="months" type="INT" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+
             <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
         </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="user_goals"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_user_goals_user"/>
     </changeSet>
 
 </databaseChangeLog>
