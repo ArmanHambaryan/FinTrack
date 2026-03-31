@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Finance Tracker</title>
+  <title th:text="#{app.title}">Finance Tracker</title>
   <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body class="page">
@@ -13,35 +13,41 @@
     <header class="topbar">
       <div class="brand">
         <span class="brand-mark"></span>
-        <span>Finance Tracker</span>
+        <span th:text="#{app.title}">Finance Tracker</span>
       </div>
       <nav class="nav-links">
-        <button class="pill theme-toggle" type="button" data-theme-toggle aria-pressed="false">
-          <span class="theme-label">Light</span>
+        <button class="pill theme-toggle" type="button" data-theme-toggle aria-pressed="false"
+                th:attr="data-label-light=#{theme.light},data-label-dark=#{theme.dark}">
+          <span class="theme-label" th:text="#{theme.light}">Light</span>
         </button>
-        <a class="pill" th:href="@{/loginPage}">Login</a>
-        <a class="pill" th:href="@{/registerPage}">Register</a>
+        <a class="pill" th:href="@{/loginPage}" th:text="#{nav.login}">Login</a>
+        <a class="pill" th:href="@{/registerPage}" th:text="#{nav.register}">Register</a>
+        <a class="pill" th:href="@{${currentUri}(lang='en')}" th:text="#{lang.en}">EN</a>
+        <a class="pill" th:href="@{${currentUri}(lang='hy')}" th:text="#{lang.hy}">Հայ</a>
+        <a class="pill" th:href="@{${currentUri}(lang='ru')}" th:text="#{lang.ru}">RU</a>
       </nav>
     </header>
 
     <section class="hero card hero-card">
       <div>
-        <h1 class="hero-title">A clean dashboard for your money goals.</h1>
-        <p class="hero-subtitle">
+        <h1 class="hero-title" th:text="#{index.hero.title}">A clean dashboard for your money goals.</h1>
+        <p class="hero-subtitle" th:text="#{index.hero.subtitle}">
           Track savings goals, monitor progress, and keep every balance in view with a calm, focused workspace.
         </p>
         <div class="cta-row">
-          <a class="btn btn-primary" th:href="@{/registerPage}">Create account</a>
-          <a class="btn btn-secondary" th:href="@{/loginPage}">Sign in</a>
+          <a class="btn btn-primary" th:href="@{/registerPage}" th:text="#{nav.create.account}">Create account</a>
+          <a class="btn btn-secondary" th:href="@{/loginPage}" th:text="#{nav.sign.in}">Sign in</a>
         </div>
       </div>
       <div class="card panel">
-        <h2 class="section-title">What you can do</h2>
-        <p class="muted">Add goals, set target dates, and watch your progress update in real time.</p>
+        <h2 class="section-title" th:text="#{index.panel.title}">What you can do</h2>
+        <p class="muted" th:text="#{index.panel.subtitle}">
+          Add goals, set target dates, and watch your progress update in real time.
+        </p>
         <div class="cta-row" style="margin-top: 16px;">
-          <span class="pill">Goals</span>
-          <span class="pill">Budgets</span>
-          <span class="pill">Insights</span>
+          <span class="pill" th:text="#{index.pill.goals}">Goals</span>
+          <span class="pill" th:text="#{index.pill.budgets}">Budgets</span>
+          <span class="pill" th:text="#{index.pill.insights}">Insights</span>
         </div>
       </div>
     </section>
@@ -59,7 +65,9 @@
         toggle.setAttribute("aria-pressed", String(isLight));
         const label = toggle.querySelector(".theme-label");
         if (label) {
-          label.textContent = isLight ? "Dark" : "Light";
+          const lightLabel = toggle.dataset.labelLight || "Light";
+          const darkLabel = toggle.dataset.labelDark || "Dark";
+          label.textContent = isLight ? darkLabel : lightLabel;
         }
       };
 

@@ -1,20 +1,102 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Transactions</title>
+  <title th:text="#{transactions.title}">Transactions</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error": "#490013",
+              "on-secondary": "#004b58",
+              "on-secondary-fixed": "#003a45",
+              "on-tertiary-container": "#4a002f",
+              "on-primary-fixed-variant": "#370086",
+              "on-secondary-fixed-variant": "#005969",
+              "outline": "#6d758c",
+              "surface-tint": "#ba9eff",
+              "surface-container-high": "#141f38",
+              "tertiary-container": "#f673b7",
+              "surface-container-highest": "#192540",
+              "error-dim": "#d73357",
+              "on-tertiary": "#5f003e",
+              "on-background": "#dee5ff",
+              "inverse-primary": "#6e3bd7",
+              "secondary-container": "#00687a",
+              "on-error-container": "#ffb2b9",
+              "on-primary-container": "#2b006e",
+              "primary-dim": "#8455ef",
+              "background": "#060e20",
+              "secondary": "#53ddfc",
+              "on-secondary-container": "#ecfaff",
+              "tertiary-fixed-dim": "#f976ba",
+              "primary-container": "#ae8dff",
+              "on-surface-variant": "#a3aac4",
+              "on-surface": "#dee5ff",
+              "primary": "#ba9eff",
+              "surface-container-lowest": "#000000",
+              "tertiary-dim": "#f271b5",
+              "surface-dim": "#060e20",
+              "tertiary-fixed": "#ff8bc5",
+              "tertiary": "#ff86c3",
+              "on-tertiary-fixed": "#360021",
+              "surface-container-low": "#091328",
+              "error-container": "#a70138",
+              "on-tertiary-fixed-variant": "#73004b",
+              "outline-variant": "#40485d",
+              "secondary-fixed": "#65e1ff",
+              "primary-fixed": "#ae8dff",
+              "surface": "#060e20",
+              "inverse-surface": "#faf8ff",
+              "primary-fixed-dim": "#a27cff",
+              "surface-variant": "#192540",
+              "on-primary": "#39008c",
+              "inverse-on-surface": "#4d556b",
+              "secondary-dim": "#40ceed",
+              "on-primary-fixed": "#000000",
+              "secondary-fixed-dim": "#48d4f3",
+              "surface-bright": "#1f2b49",
+              "error": "#ff6e84",
+              "surface-container": "#0f1930"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
   <link rel="stylesheet" th:href="@{/css/app.css}">
+  <style>
+    .donut-glow {
+      filter: drop-shadow(0 0 12px currentColor);
+    }
+  </style>
 </head>
 <body class="page">
   <div class="settings">
-    <button class="pill" type="button" data-settings-toggle aria-expanded="false">Settings</button>
+    <button class="pill" type="button" data-settings-toggle aria-expanded="false" th:text="#{settings}">Settings</button>
     <div class="settings-panel" data-settings-panel hidden>
-      <button class="pill theme-toggle" type="button" data-theme-toggle aria-pressed="false">
-        <span class="theme-label">Light</span>
+      <button class="pill theme-toggle" type="button" data-theme-toggle aria-pressed="false"
+              th:attr="data-label-light=#{theme.light},data-label-dark=#{theme.dark}">
+        <span class="theme-label" th:text="#{theme.light}">Light</span>
       </button>
+      <div class="nav-links">
+        <a class="pill" th:href="@{${currentUri}(lang='en')}" th:text="#{lang.en}">EN</a>
+        <a class="pill" th:href="@{${currentUri}(lang='hy')}" th:text="#{lang.hy}">Հայ</a>
+        <a class="pill" th:href="@{${currentUri}(lang='ru')}" th:text="#{lang.ru}">RU</a>
+      </div>
       <form th:action="@{/logout}" method="post">
-        <button class="btn btn-ghost" type="submit">Logout</button>
+        <button class="btn btn-ghost" type="submit" th:text="#{nav.logout}">Logout</button>
       </form>
     </div>
   </div>
@@ -24,10 +106,10 @@
     <header class="topbar">
       <div class="brand">
         <span class="brand-mark"></span>
-        <span>Finance Tracker</span>
+        <span th:text="#{app.title}">Finance Tracker</span>
       </div>
       <nav class="nav-links">
-        <a class="pill" th:href="@{/user/home}">User Home</a>
+        <a class="pill" th:href="@{/user/home}" th:text="#{nav.user.home}">User Home</a>
       </nav>
     </header>
 
@@ -35,15 +117,17 @@
 
     <section class="split">
       <div class="card panel">
-        <h1 class="section-title">Add income</h1>
-        <p class="muted">Record incoming cash and keep your balance accurate.</p>
+        <h1 class="section-title" th:text="#{transactions.income.title}">Add income</h1>
+        <p class="muted" th:text="#{transactions.income.subtitle}">
+          Record incoming cash and keep your balance accurate.
+        </p>
         <form class="form-grid" action="/transaction/income" method="post" style="margin-top: 16px;">
           <label class="input-group">
-            <span>Amount</span>
+            <span th:text="#{transactions.amount}">Amount</span>
             <input class="input" type="number" name="amount" min="0" step="0.01" required>
           </label>
           <label class="input-group">
-            <span>Currency</span>
+            <span th:text="#{transactions.currency}">Currency</span>
             <select class="input" name="currency_code">
               <option value="AMD">AMD</option>
               <option value="USD">USD</option>
@@ -52,27 +136,29 @@
             </select>
           </label>
           <label class="input-group">
-            <span>Description</span>
+            <span th:text="#{transactions.description}">Description</span>
             <input class="input" type="text" name="description">
           </label>
           <label class="input-group">
-            <span>Date</span>
+            <span th:text="#{transactions.date}">Date</span>
             <input class="input" type="datetime-local" name="transaction_date">
           </label>
-          <button class="btn btn-primary" type="submit">Add Income</button>
+          <button class="btn btn-primary" type="submit" th:text="#{transactions.add.income}">Add Income</button>
         </form>
       </div>
 
       <div class="card panel">
-        <h2 class="section-title">Add expense</h2>
-        <p class="muted">Capture spending and stay on top of your goals.</p>
+        <h2 class="section-title" th:text="#{transactions.expense.title}">Add expense</h2>
+        <p class="muted" th:text="#{transactions.expense.subtitle}">
+          Capture spending and stay on top of your goals.
+        </p>
         <form class="form-grid" action="/transaction/expense" method="post" style="margin-top: 16px;">
           <label class="input-group">
-            <span>Amount</span>
+            <span th:text="#{transactions.amount}">Amount</span>
             <input class="input" type="number" name="amount" min="0" step="0.01" required>
           </label>
           <label class="input-group">
-            <span>Currency</span>
+            <span th:text="#{transactions.currency}">Currency</span>
             <select class="input" name="currency_code">
               <option value="AMD">AMD</option>
               <option value="USD">USD</option>
@@ -81,7 +167,7 @@
             </select>
           </label>
           <label class="input-group">
-            <span>Category</span>
+            <span th:text="#{transactions.category}">Category</span>
             <input class="input" type="text" name="categoryName" list="category-options" required>
             <datalist id="category-options">
               <option th:each="category : ${categories}" th:value="${category.name}"></option>
@@ -89,33 +175,35 @@
             </datalist>
           </label>
           <label class="input-group">
-            <span>Date</span>
+            <span th:text="#{transactions.date}">Date</span>
             <input class="input" type="datetime-local" name="transaction_date">
           </label>
-          <button class="btn btn-secondary" type="submit">Add Expense</button>
+          <button class="btn btn-secondary" type="submit" th:text="#{transactions.add.expense}">Add Expense</button>
         </form>
       </div>
     </section>
 
     <section class="card panel" style="margin-top: 24px;">
-      <h2 class="section-title">Recent transactions</h2>
-      <p class="muted">Your latest income and expense entries.</p>
+      <h2 class="section-title" th:text="#{transactions.recent.title}">Recent transactions</h2>
+      <p class="muted" th:text="#{transactions.recent.subtitle}">
+        Your latest income and expense entries.
+      </p>
 
       <div style="overflow-x: auto; margin-top: 16px;">
         <table class="table">
           <thead>
             <tr>
-              <th>Type</th>
-              <th>Amount</th>
-              <th>Original</th>
-              <th>Category</th>
-              <th>Date</th>
-              <th>Description</th>
+              <th th:text="#{transactions.table.type}">Type</th>
+              <th th:text="#{transactions.table.amount}">Amount</th>
+              <th th:text="#{transactions.table.original}">Original</th>
+              <th th:text="#{transactions.table.category}">Category</th>
+              <th th:text="#{transactions.table.date}">Date</th>
+              <th th:text="#{transactions.table.description}">Description</th>
             </tr>
           </thead>
           <tbody>
             <tr th:if="${#lists.isEmpty(transactions)}">
-              <td colspan="5" class="muted">No transactions yet.</td>
+              <td colspan="5" class="muted" th:text="#{transactions.empty}">No transactions yet.</td>
             </tr>
             <tr th:each="tx : ${transactions}">
               <td th:text="${tx.type}">INCOME</td>
@@ -129,7 +217,185 @@
         </table>
       </div>
     </section>
+    
+    <section class="mt-8">
+      <div class="card panel chart-surface rounded-[2rem] p-8 md:p-10 relative overflow-hidden">
+        <div class="relative z-10 flex flex-col items-center gap-10">
+          <section class="text-center">
+            <span class="text-tertiary font-label text-label-md uppercase tracking-[0.2em] mb-2 block">Monthly Analysis</span>
+            <h2 class="text-3xl md:text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-3">Spending Insights</h2>
+            <p class="text-on-surface-variant max-w-xl mx-auto leading-relaxed">
+              Percentage of expenses by category and monthly income/expense trends.
+            </p>
+          </section>
+
+          <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="chart-panel rounded-[1.5rem] p-6">
+              <h3 class="text-lg font-headline font-bold text-on-surface mb-4">Expenses by Category</h3>
+              <div class="w-full h-72">
+                <canvas id="pieChart"></canvas>
+              </div>
+            </div>
+            <div class="chart-panel rounded-[1.5rem] p-6">
+              <h3 class="text-lg font-headline font-bold text-on-surface mb-4">Monthly Statistics</h3>
+              <div class="w-full h-72">
+                <canvas id="lineChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -right-24 -bottom-24 w-80 h-80 bg-primary/10 rounded-full blur-[100px]"></div>
+        <div class="absolute -left-24 -top-24 w-80 h-80 bg-secondary/10 rounded-full blur-[100px]"></div>
+      </div>
+    </section>
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script th:inline="javascript">
+    (() => {
+      const categories = [[${chartCategories}]];
+      const amounts = [[${chartAmounts}]];
+      const months = [[${chartMonths}]];
+      const income = [[${chartIncome}]];
+      const expense = [[${chartExpense}]];
+
+      const pieEl = document.getElementById("pieChart");
+      if (pieEl && categories && amounts) {
+        const palette = [
+          "#3366cc",
+          "#dc3912",
+          "#ff9900",
+          "#109618",
+          "#990099",
+          "#0099c6",
+          "#dd4477",
+          "#66aa00",
+          "#b82e2e",
+          "#316395"
+        ];
+        new Chart(pieEl, {
+          type: "pie",
+          data: {
+            labels: categories,
+            datasets: [{
+              data: amounts,
+              backgroundColor: palette,
+              borderColor: "#ffffff",
+              borderWidth: 2
+            }]
+          },
+          options: {
+            plugins: {
+              title: {
+                display: true,
+                text: "Expenses by Category"
+              },
+              legend: {
+                position: "right",
+                labels: {
+                  boxWidth: 14,
+                  boxHeight: 14,
+                  usePointStyle: true,
+                  pointStyle: "rectRounded",
+                  generateLabels: (chart) => {
+                    const data = chart.data;
+                    if (!data.labels) return [];
+                    return data.labels.map((label, i) => ({
+                      text: String(label),
+                      fillStyle: data.datasets[0].backgroundColor[i % palette.length],
+                      strokeStyle: "#ffffff",
+                      lineWidth: 2,
+                      hidden: false,
+                      index: i
+                    }));
+                  }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: (context) => {
+                    const label = context.label || "";
+                    const value = context.parsed;
+                    return `${label}: ${value}`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      const lineEl = document.getElementById("lineChart");
+      if (lineEl && months && income && expense) {
+        new Chart(lineEl, {
+          type: "line",
+          data: {
+            labels: months,
+            datasets: [
+              {
+                label: "Income",
+                data: income,
+                borderColor: "#22c55e",
+                tension: 0.3
+              },
+              {
+                label: "Expense",
+                data: expense,
+                borderColor: "#ef4444",
+                tension: 0.3
+              }
+            ]
+          },
+          options: { responsive: true }
+        });
+      }
+    })();
+  </script>
+  <style>
+    .chart-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+    .chart-card {
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 14px;
+      padding: 14px 16px 16px;
+    }
+    .chart-title {
+      margin: 0 0 12px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .chart-wrap {
+      height: 260px;
+      position: relative;
+    }
+    .donut-wrap {
+      height: 260px;
+    }
+    .line-wrap {
+      height: 260px;
+    }
+    .chart-wrap canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .chart-surface {
+      background: #0f1930;
+    }
+    .chart-panel {
+      background: #141f38;
+    }
+    .theme-light .chart-surface {
+      background: #eef2ff;
+    }
+    .theme-light .chart-panel {
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+    }
+  </style>
   <script>
     (() => {
       const settingsToggle = document.querySelector("[data-settings-toggle]");
@@ -145,7 +411,9 @@
         toggle.setAttribute("aria-pressed", String(isLight));
         const label = toggle.querySelector(".theme-label");
         if (label) {
-          label.textContent = isLight ? "Dark" : "Light";
+          const lightLabel = toggle.dataset.labelLight || "Light";
+          const darkLabel = toggle.dataset.labelDark || "Dark";
+          label.textContent = isLight ? darkLabel : lightLabel;
         }
       };
 

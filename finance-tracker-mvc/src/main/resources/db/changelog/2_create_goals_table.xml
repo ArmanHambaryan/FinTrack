@@ -6,6 +6,7 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <changeSet id="2" author="harut">
+        <validCheckSum>9:a05d55f4a98c7ba806c497b30b20bd66</validCheckSum>
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="user_goals"/>
