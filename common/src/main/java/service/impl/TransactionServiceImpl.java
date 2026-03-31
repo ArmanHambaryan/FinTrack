@@ -3,6 +3,7 @@ package service.impl;
 
 import lombok.RequiredArgsConstructor;
 import model.Transaction;
+import model.User;
 import org.springframework.stereotype.Service;
 import repository.TransactionRepository;
 import repository.UserRepository;
@@ -123,4 +124,5 @@ public class TransactionServiceImpl implements TransactionService {
         }
         return currencyCode.trim().toUpperCase(Locale.ROOT);
     }
+
 }

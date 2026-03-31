@@ -1,10 +1,12 @@
 package repository;
 
 import model.Transaction;
+import model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,6 +15,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     List<Transaction> findByUserId(Integer userId);
 
     List<Transaction> findByType(String type);
+
 
     @Query("""
             select coalesce(sum(t.amount), 0)
@@ -24,4 +27,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
     Double sumMonthlyExpense(@Param("userId") Integer userId,
                              @Param("start") LocalDateTime start,
                              @Param("end") LocalDateTime end);
+
+
+
 }

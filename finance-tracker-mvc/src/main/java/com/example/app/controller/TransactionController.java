@@ -15,6 +15,7 @@ import service.CategoryService;
 import service.TransactionService;
 import service.UserService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -85,4 +86,5 @@ public class TransactionController {
         }
         return userService.findByEmail(authentication.getName()).orElse(null);
     }
+
 }

@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" th:lang="${#locale.language}" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
+  <title th:text="#{login.title}">Login</title>
   <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body class="page">
@@ -13,34 +13,41 @@
     <header class="topbar">
       <div class="brand">
         <span class="brand-mark"></span>
-        <span>Finance Tracker</span>
+        <span th:text="#{app.title}">Finance Tracker</span>
+      </div>
+      <div class="nav-links">
+        <a class="pill" th:href="@{${currentUri}(lang='en')}" th:text="#{lang.en}">EN</a>
+        <a class="pill" th:href="@{${currentUri}(lang='hy')}" th:text="#{lang.hy}">Հայ</a>
+        <a class="pill" th:href="@{${currentUri}(lang='ru')}" th:text="#{lang.ru}">RU</a>
       </div>
     </header>
-    <p th:if="${param.blocked}" style="color:red;">
+    <p th:if="${param.blocked}" style="color:red;" th:text="#{login.blocked}">
       Your account is blocked. Please try again later.
     </p>
 
     <section class="card form-card">
-      <h1 class="form-title">Welcome back</h1>
-      <p class="form-subtitle">Sign in to continue building your goals.</p>
+      <h1 class="form-title" th:text="#{login.welcome}">Welcome back</h1>
+      <p class="form-subtitle" th:text="#{login.subtitle}">Sign in to continue building your goals.</p>
       <p class="alert" th:if="${msg}" th:text="${msg}"></p>
-      <p class="alert error" th:if="${param.error}">Invalid email or password.</p>
-      <p class="alert error" th:if="${param.blocked}">Your account is blocked. Please contact admin.</p>
+      <p class="alert error" th:if="${param.error}" th:text="#{login.error.invalid}">Invalid email or password.</p>
+      <p class="alert error" th:if="${param.blocked}" th:text="#{login.error.blocked}">
+        Your account is blocked. Please contact admin.
+      </p>
       <form class="form-grid" th:action="@{/login}" method="post">
         <label class="input-group">
-          <span>Email</span>
+          <span th:text="#{login.email}">Email</span>
           <input class="input" type="email" name="username" required>
         </label>
         <label class="input-group">
-          <span>Password</span>
+          <span th:text="#{login.password}">Password</span>
           <input class="input" type="password" name="password" required>
         </label>
-        <button class="btn btn-primary" type="submit">Sign in</button>
+        <button class="btn btn-primary" type="submit" th:text="#{login.signin}">Sign in</button>
       </form>
       <div class="muted helper-links" style="margin-top: 18px;">
-        <span>New here?</span>
-        <a class="pill" th:href="@{/registerPage}">Create account</a>
-        <a class="pill" th:href="@{/forgotPassword}">Forgot password?</a>
+        <span th:text="#{login.new}">New here?</span>
+        <a class="pill" th:href="@{/registerPage}" th:text="#{login.create}">Create account</a>
+        <a class="pill" th:href="@{/forgotPassword}" th:text="#{login.forgot}">Forgot password?</a>
       </div>
     </section>
   </main>
