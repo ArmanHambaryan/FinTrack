@@ -43,4 +43,5 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
             "ORDER BY MONTH(t.transaction_date)")
     List<Object[]> getMonthlyStats(@Param("userId") Integer userId);
 
+
 }
