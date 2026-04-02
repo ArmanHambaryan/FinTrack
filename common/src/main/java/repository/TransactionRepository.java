@@ -28,6 +28,20 @@ public interface TransactionRepository extends JpaRepository<Transaction, Intege
                              @Param("start") LocalDateTime start,
                              @Param("end") LocalDateTime end);
 
+    @Query("SELECT t.categoryId, SUM(t.amount) " +
+            "FROM Transaction t " +
+            "WHERE t.userId = :userId AND t.type = 'EXPENSE' " +
+            "GROUP BY t.categoryId")
+    List<Object[]> getExpensesByCategory(@Param("userId") Integer userId);
+
+    @Query("SELECT MONTH(t.transaction_date), " +
+            "SUM(CASE WHEN t.type = 'INCOME' THEN t.amount ELSE 0 END), " +
+            "SUM(CASE WHEN t.type = 'EXPENSE' THEN t.amount ELSE 0 END) " +
+            "FROM Transaction t " +
+            "WHERE t.userId = :userId " +
+            "GROUP BY MONTH(t.transaction_date) " +
+            "ORDER BY MONTH(t.transaction_date)")
+    List<Object[]> getMonthlyStats(@Param("userId") Integer userId);
 
 
 }

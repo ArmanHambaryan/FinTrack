@@ -4,7 +4,83 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title th:text="#{transactions.title}">Transactions</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-error": "#490013",
+              "on-secondary": "#004b58",
+              "on-secondary-fixed": "#003a45",
+              "on-tertiary-container": "#4a002f",
+              "on-primary-fixed-variant": "#370086",
+              "on-secondary-fixed-variant": "#005969",
+              "outline": "#6d758c",
+              "surface-tint": "#ba9eff",
+              "surface-container-high": "#141f38",
+              "tertiary-container": "#f673b7",
+              "surface-container-highest": "#192540",
+              "error-dim": "#d73357",
+              "on-tertiary": "#5f003e",
+              "on-background": "#dee5ff",
+              "inverse-primary": "#6e3bd7",
+              "secondary-container": "#00687a",
+              "on-error-container": "#ffb2b9",
+              "on-primary-container": "#2b006e",
+              "primary-dim": "#8455ef",
+              "background": "#060e20",
+              "secondary": "#53ddfc",
+              "on-secondary-container": "#ecfaff",
+              "tertiary-fixed-dim": "#f976ba",
+              "primary-container": "#ae8dff",
+              "on-surface-variant": "#a3aac4",
+              "on-surface": "#dee5ff",
+              "primary": "#ba9eff",
+              "surface-container-lowest": "#000000",
+              "tertiary-dim": "#f271b5",
+              "surface-dim": "#060e20",
+              "tertiary-fixed": "#ff8bc5",
+              "tertiary": "#ff86c3",
+              "on-tertiary-fixed": "#360021",
+              "surface-container-low": "#091328",
+              "error-container": "#a70138",
+              "on-tertiary-fixed-variant": "#73004b",
+              "outline-variant": "#40485d",
+              "secondary-fixed": "#65e1ff",
+              "primary-fixed": "#ae8dff",
+              "surface": "#060e20",
+              "inverse-surface": "#faf8ff",
+              "primary-fixed-dim": "#a27cff",
+              "surface-variant": "#192540",
+              "on-primary": "#39008c",
+              "inverse-on-surface": "#4d556b",
+              "secondary-dim": "#40ceed",
+              "on-primary-fixed": "#000000",
+              "secondary-fixed-dim": "#48d4f3",
+              "surface-bright": "#1f2b49",
+              "error": "#ff6e84",
+              "surface-container": "#0f1930"
+            },
+            fontFamily: {
+              "headline": ["Plus Jakarta Sans"],
+              "body": ["Manrope"],
+              "label": ["Manrope"]
+            },
+            borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
   <link rel="stylesheet" th:href="@{/css/app.css}">
+  <style>
+    .donut-glow {
+      filter: drop-shadow(0 0 12px currentColor);
+    }
+  </style>
 </head>
 <body class="page">
   <div class="settings">
@@ -141,7 +217,185 @@
         </table>
       </div>
     </section>
+    
+    <section class="mt-8">
+      <div class="card panel chart-surface rounded-[2rem] p-8 md:p-10 relative overflow-hidden">
+        <div class="relative z-10 flex flex-col items-center gap-10">
+          <section class="text-center">
+            <span class="text-tertiary font-label text-label-md uppercase tracking-[0.2em] mb-2 block">Monthly Analysis</span>
+            <h2 class="text-3xl md:text-4xl font-headline font-extrabold tracking-tight text-on-surface mb-3">Spending Insights</h2>
+            <p class="text-on-surface-variant max-w-xl mx-auto leading-relaxed">
+              Percentage of expenses by category and monthly income/expense trends.
+            </p>
+          </section>
+
+          <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="chart-panel rounded-[1.5rem] p-6">
+              <h3 class="text-lg font-headline font-bold text-on-surface mb-4">Expenses by Category</h3>
+              <div class="w-full h-72">
+                <canvas id="pieChart"></canvas>
+              </div>
+            </div>
+            <div class="chart-panel rounded-[1.5rem] p-6">
+              <h3 class="text-lg font-headline font-bold text-on-surface mb-4">Monthly Statistics</h3>
+              <div class="w-full h-72">
+                <canvas id="lineChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="absolute -right-24 -bottom-24 w-80 h-80 bg-primary/10 rounded-full blur-[100px]"></div>
+        <div class="absolute -left-24 -top-24 w-80 h-80 bg-secondary/10 rounded-full blur-[100px]"></div>
+      </div>
+    </section>
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script th:inline="javascript">
+    (() => {
+      const categories = [[${chartCategories}]];
+      const amounts = [[${chartAmounts}]];
+      const months = [[${chartMonths}]];
+      const income = [[${chartIncome}]];
+      const expense = [[${chartExpense}]];
+
+      const pieEl = document.getElementById("pieChart");
+      if (pieEl && categories && amounts) {
+        const palette = [
+          "#3366cc",
+          "#dc3912",
+          "#ff9900",
+          "#109618",
+          "#990099",
+          "#0099c6",
+          "#dd4477",
+          "#66aa00",
+          "#b82e2e",
+          "#316395"
+        ];
+        new Chart(pieEl, {
+          type: "pie",
+          data: {
+            labels: categories,
+            datasets: [{
+              data: amounts,
+              backgroundColor: palette,
+              borderColor: "#ffffff",
+              borderWidth: 2
+            }]
+          },
+          options: {
+            plugins: {
+              title: {
+                display: true,
+                text: "Expenses by Category"
+              },
+              legend: {
+                position: "right",
+                labels: {
+                  boxWidth: 14,
+                  boxHeight: 14,
+                  usePointStyle: true,
+                  pointStyle: "rectRounded",
+                  generateLabels: (chart) => {
+                    const data = chart.data;
+                    if (!data.labels) return [];
+                    return data.labels.map((label, i) => ({
+                      text: String(label),
+                      fillStyle: data.datasets[0].backgroundColor[i % palette.length],
+                      strokeStyle: "#ffffff",
+                      lineWidth: 2,
+                      hidden: false,
+                      index: i
+                    }));
+                  }
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: (context) => {
+                    const label = context.label || "";
+                    const value = context.parsed;
+                    return `${label}: ${value}`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+
+      const lineEl = document.getElementById("lineChart");
+      if (lineEl && months && income && expense) {
+        new Chart(lineEl, {
+          type: "line",
+          data: {
+            labels: months,
+            datasets: [
+              {
+                label: "Income",
+                data: income,
+                borderColor: "#22c55e",
+                tension: 0.3
+              },
+              {
+                label: "Expense",
+                data: expense,
+                borderColor: "#ef4444",
+                tension: 0.3
+              }
+            ]
+          },
+          options: { responsive: true }
+        });
+      }
+    })();
+  </script>
+  <style>
+    .chart-grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+    .chart-card {
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      border-radius: 14px;
+      padding: 14px 16px 16px;
+    }
+    .chart-title {
+      margin: 0 0 12px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .chart-wrap {
+      height: 260px;
+      position: relative;
+    }
+    .donut-wrap {
+      height: 260px;
+    }
+    .line-wrap {
+      height: 260px;
+    }
+    .chart-wrap canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+    .chart-surface {
+      background: #0f1930;
+    }
+    .chart-panel {
+      background: #141f38;
+    }
+    .theme-light .chart-surface {
+      background: #eef2ff;
+    }
+    .theme-light .chart-panel {
+      background: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+    }
+  </style>
   <script>
     (() => {
       const settingsToggle = document.querySelector("[data-settings-toggle]");
