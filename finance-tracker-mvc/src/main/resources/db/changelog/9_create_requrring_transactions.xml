@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create-recurring-transactions" author="harut">
+        <createTable tableName="recurring_transactions">
+
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="user_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="amount" type="DOUBLE"/>
+
+            <column name="currency_code" type="VARCHAR(10)" defaultValue="AMD"/>
+
+            <column name="exchange_rate" type="DOUBLE" defaultValueNumeric="1.0"/>
+
+            <column name="type" type="VARCHAR(10)"/>
+
+            <column name="category_id" type="INT"/>
+
+            <column name="description" type="VARCHAR(255)"/>
+
+            <column name="frequency" type="VARCHAR(10)"/>
+
+            <column name="start_date" type="DATE"/>
+
+            <column name="next_run_date" type="DATE"/>
+
+            <column name="active" type="BOOLEAN" defaultValueBoolean="true"/>
+
+            <column name="created_at" type="DATETIME"/>
+
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

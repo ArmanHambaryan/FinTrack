@@ -463,7 +463,8 @@ button {
   }
 }
 
-.page.theme-light {
+.page.theme-light,
+.theme-light .page {
   --bg-deep: #f5f7fb;
   --bg-mid: #edf1f7;
   --bg-light: #e1e7f2;
@@ -477,34 +478,42 @@ button {
     linear-gradient(180deg, var(--bg-deep), var(--bg-mid) 55%, var(--bg-light));
 }
 
-.page.theme-light .decor-1 {
+.page.theme-light .decor-1,
+.theme-light .page .decor-1 {
   background: radial-gradient(circle at 30% 30%, rgba(255, 179, 71, 0.5), rgba(255, 179, 71, 0.1));
 }
 
-.page.theme-light .decor-2 {
+.page.theme-light .decor-2,
+.theme-light .page .decor-2 {
   background: radial-gradient(circle at 40% 40%, rgba(79, 209, 197, 0.45), rgba(79, 209, 197, 0.08));
 }
 
-.page.theme-light .input {
+.page.theme-light .input,
+.theme-light .page .input {
   background: rgba(255, 255, 255, 0.92);
   border-color: rgba(15, 23, 42, 0.08);
 }
 
 .page.theme-light .goal-item,
-.page.theme-light .table {
+.page.theme-light .table,
+.theme-light .page .goal-item,
+.theme-light .page .table {
   background: rgba(255, 255, 255, 0.85);
   border-color: rgba(15, 23, 42, 0.12);
 }
 
-.page.theme-light .table thead {
+.page.theme-light .table thead,
+.theme-light .page .table thead {
   background: rgba(15, 23, 42, 0.04);
 }
 
-.page.theme-light .table tbody tr:nth-child(even) {
+.page.theme-light .table tbody tr:nth-child(even),
+.theme-light .page .table tbody tr:nth-child(even) {
   background: rgba(15, 23, 42, 0.03);
 }
 
-.page.theme-light .table tbody tr:hover {
+.page.theme-light .table tbody tr:hover,
+.theme-light .page .table tbody tr:hover {
   background: rgba(122, 168, 255, 0.12);
 }
 
