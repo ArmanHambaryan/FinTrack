@@ -5,6 +5,9 @@ import model.Category;
 import model.RecurringTransaction;
 import model.Transaction;
 import model.User;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +21,7 @@ import service.RecurringTransactionService;
 import service.TransactionService;
 import service.UserService;
 
+import java.io.IOException;
 import java.time.Month;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
@@ -125,5 +129,22 @@ public class TransactionController {
         }
         return userService.findByEmail(authentication.getName()).orElse(null);
     }
+    @GetMapping("/export")
+    public ResponseEntity<byte[]> exportExcel(Authentication authentication) throws IOException {
+        User user = getUser(authentication);
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        byte[] data = transactionService.exportToExcel(user.getId());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        ));
+        headers.setContentDispositionFormData("attachment", "transactions.xlsx");
+
+        return ResponseEntity.ok().headers(headers).body(data);
+}
 
 }

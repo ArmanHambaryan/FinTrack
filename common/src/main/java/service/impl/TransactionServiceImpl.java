@@ -4,12 +4,23 @@ package service.impl;
 import lombok.RequiredArgsConstructor;
 import model.Transaction;
 import model.User;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import repository.TransactionRepository;
 import repository.UserRepository;
 import service.CurrencyRateService;
 import service.TransactionService;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -123,6 +134,55 @@ public class TransactionServiceImpl implements TransactionService {
             return "AMD";
         }
         return currencyCode.trim().toUpperCase(Locale.ROOT);
+    }
+    @Override
+    public byte[] exportToExcel(Integer userId) throws IOException {
+        List<Transaction> transactions = userId == null
+                ? List.of()
+                : transactionRepository.findByUserId(userId);
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Transactions");
+
+        CellStyle headerStyle = workbook.createCellStyle();
+        headerStyle.setFillForegroundColor(IndexedColors.ORANGE.getIndex());
+        headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        Font font = workbook.createFont();
+        font.setBold(true);
+        font.setColor(IndexedColors.WHITE.getIndex());
+        headerStyle.setFont(font);
+
+        Row header = sheet.createRow(0);
+        String[] columns = {"ID", "Type", "Amount", "Currency", "Category", "Description", "Date"};
+        for (int i = 0; i < columns.length; i++) {
+            Cell cell = header.createCell(i);
+            cell.setCellValue(columns[i]);
+            cell.setCellStyle(headerStyle);
+            sheet.autoSizeColumn(i);
+        }
+
+        int rowNum = 1;
+        for (Transaction tx : transactions) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(tx.getId());
+            row.createCell(1).setCellValue(tx.getType());
+            row.createCell(2).setCellValue(tx.getAmount());
+            row.createCell(3).setCellValue(tx.getCurrency_code());
+            row.createCell(4).setCellValue(tx.getCategoryId() != null ? tx.getCategoryId() : 0);
+            row.createCell(5).setCellValue(tx.getDescription());
+            row.createCell(6).setCellValue(tx.getTransaction_date() == null
+                    ? ""
+                    : tx.getTransaction_date().toString());
+        }
+
+        for (int i = 0; i < columns.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        workbook.write(out);
+        workbook.close();
+        return out.toByteArray();
     }
 
 }

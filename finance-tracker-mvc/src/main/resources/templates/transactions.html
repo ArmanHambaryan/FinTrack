@@ -281,6 +281,9 @@
     <p class="muted" th:text="#{transactions.recent.subtitle}">
       Your latest income and expense entries.
     </p>
+    <a th:href="@{/transaction/export}">
+      <button class="btn btn-ghost" type="button">⬇ Export Excel</button>
+    </a>
 
     <div style="overflow-x: auto; margin-top: 16px;">
       <table class="table">

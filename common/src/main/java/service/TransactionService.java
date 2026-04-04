@@ -2,6 +2,7 @@ package service;
 
 import model.Transaction;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface TransactionService {
@@ -20,5 +21,7 @@ public interface TransactionService {
     void addExpense(Transaction transaction);
 
     Double getMonthlyExpense(Integer userId);
+
+    byte[] exportToExcel(Integer userId) throws IOException;
 
 }
