@@ -2,6 +2,7 @@ package com.example.app.controller;
 
 import lombok.RequiredArgsConstructor;
 import model.Category;
+import model.RecurringTransaction;
 import model.Transaction;
 import model.User;
 import org.springframework.security.core.Authentication;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import repository.TransactionRepository;
 import service.CategoryService;
+import service.RecurringTransactionService;
 import service.TransactionService;
 import service.UserService;
 
@@ -34,6 +36,7 @@ public class TransactionController {
     private final UserService userService;
     private final CategoryService categoryService;
     private final TransactionRepository transactionRepository;
+    private final RecurringTransactionService recurringService;
 
     @GetMapping
     public String transactionPage(Authentication authentication,
@@ -80,6 +83,10 @@ public class TransactionController {
         model.addAttribute("chartMonths", chartMonths);
         model.addAttribute("chartIncome", chartIncome);
         model.addAttribute("chartExpense", chartExpense);
+        model.addAttribute("recurringTransaction", new RecurringTransaction());
+        List<RecurringTransaction> recurringList =
+                (user == null) ? List.of() : recurringService.getByUser(user.getId());
+        model.addAttribute("recurringList", recurringList);
         return "transactions";
     }
 

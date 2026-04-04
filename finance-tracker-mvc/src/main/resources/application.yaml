@@ -28,7 +28,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/fin_track
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:****}
+    password: ${DB_PASSWORD:2006.Harut}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
@@ -41,5 +41,8 @@ spring:
         rollingpolicy:
           file-name-pattern: log/FinTrack-%d{yyyy-MM-dd}.log
           max-history: 30
+  task:
+    scheduling:
+      enabled: true
 server:
   port: 8083

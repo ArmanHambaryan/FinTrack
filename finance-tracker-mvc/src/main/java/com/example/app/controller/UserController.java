@@ -2,6 +2,7 @@ package com.example.app.controller;
 
 import lombok.RequiredArgsConstructor;
 import model.Goal;
+import model.RecurringTransaction;
 import model.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +15,7 @@ import service.BudgetService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import service.GoalService;
+import service.RecurringTransactionService;
 import service.TransactionService;
 import service.UserService;
 
@@ -31,6 +33,7 @@ public class UserController {
     private final GoalService goalService;
     private final BudgetService budgetService;
     private final TransactionService transactionService;
+    private final RecurringTransactionService recurringService;
     private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/user/home")
@@ -48,8 +51,9 @@ public class UserController {
         List<Goal> goals = (user == null) ? List.of() : goalService.findByUserId(user.getId());
 
         model.addAttribute("goals", goals);
-        if (user != null) {
-            model.addAttribute("userId", user.getId());
+        Integer userId = (user == null) ? null : user.getId();
+        if (userId != null) {
+            model.addAttribute("userId", userId);
         }
 
         Double budget = (user == null) ? 0.0 : budgetService.getCurrentMonthBudget(user.getId());
@@ -78,6 +82,10 @@ public class UserController {
         model.addAttribute("calculatorResult", calculatorResult);
         model.addAttribute("calculatorCurrencyCode", calculatorCurrencyCode);
         model.addAttribute("calculatorResultAmd", calculatorResultAmd);
+        model.addAttribute("recurringTransaction", new RecurringTransaction());
+        List<RecurringTransaction> recurringList =
+                (userId == null) ? List.of() : recurringService.getByUser(userId);
+        model.addAttribute("recurringList", recurringList);
 
         return "userHome";
     }
