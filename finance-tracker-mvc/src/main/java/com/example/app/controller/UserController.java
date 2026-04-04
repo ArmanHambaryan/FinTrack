@@ -39,6 +39,7 @@ public class UserController {
     @GetMapping("/user/home")
     public String userHome(Model model,
                            Authentication authentication,
+                           @RequestParam(required = false) String goalMessage,
                            @RequestParam(required = false) BigDecimal calculatorTargetAmount,
                            @RequestParam(required = false) Integer calculatorMonths,
                            @RequestParam(required = false) BigDecimal calculatorResult,
@@ -82,6 +83,7 @@ public class UserController {
         model.addAttribute("calculatorResult", calculatorResult);
         model.addAttribute("calculatorCurrencyCode", calculatorCurrencyCode);
         model.addAttribute("calculatorResultAmd", calculatorResultAmd);
+        model.addAttribute("goalMessage", goalMessage);
         model.addAttribute("recurringTransaction", new RecurringTransaction());
         List<RecurringTransaction> recurringList =
                 (userId == null) ? List.of() : recurringService.getByUser(userId);

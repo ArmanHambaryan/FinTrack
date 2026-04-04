@@ -287,6 +287,49 @@ button {
   box-shadow: 0 0 0 3px rgba(122, 168, 255, 0.2);
 }
 
+.password-field {
+  position: relative;
+}
+
+.password-input {
+  padding-right: 52px;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: var(--text);
+  border-color: rgba(79, 209, 197, 0.45);
+  background: rgba(79, 209, 197, 0.12);
+}
+
+.password-toggle.is-active {
+  color: var(--text);
+  border-color: rgba(255, 179, 71, 0.45);
+  background: rgba(255, 179, 71, 0.14);
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid rgba(122, 168, 255, 0.7);
+  outline-offset: 2px;
+}
+
 .select {
   appearance: none;
   background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
@@ -349,6 +392,42 @@ button {
   background: rgba(8, 12, 20, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.08);
   gap: 12px;
+}
+
+.goal-progress {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.goal-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.goal-progress-value {
+  font-weight: 700;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.goal-progress-track {
+  position: relative;
+  height: 12px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.goal-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2) 55%, var(--accent-3));
+  box-shadow: 0 0 18px rgba(79, 209, 197, 0.35);
 }
 
 .logout-form {
@@ -494,12 +573,24 @@ button {
   border-color: rgba(15, 23, 42, 0.08);
 }
 
+.page.theme-light .password-toggle,
+.theme-light .page .password-toggle {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
 .page.theme-light .goal-item,
 .page.theme-light .table,
 .theme-light .page .goal-item,
 .theme-light .page .table {
   background: rgba(255, 255, 255, 0.85);
   border-color: rgba(15, 23, 42, 0.12);
+}
+
+.page.theme-light .goal-progress-track,
+.theme-light .page .goal-progress-track {
+  background: rgba(15, 23, 42, 0.06);
+  border-color: rgba(15, 23, 42, 0.08);
 }
 
 .page.theme-light .table thead,

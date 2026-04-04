@@ -21,4 +21,13 @@ public interface GoalService {
         List<Goal> findByUserId(Integer userId);
 
         int calculateProgress(Goal goal);
+
+        List<Goal> activeGoals(Integer userId);
+
+        List<Goal> completedGoals(Integer userId);
+
+        void updateProgress(Integer Id, double amount);
+
+
+
     }
