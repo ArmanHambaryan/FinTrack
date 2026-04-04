@@ -66,6 +66,42 @@ public class GoalServiceImpl implements GoalService {
         return (int) (goal.getSaved_amount() / goal.getTarget_amount());
     }
 
+    @Override
+    public List<Goal> activeGoals(Integer userId) {
+        return goalRepository.findActiveGoals(userId);
+    }
+
+    @Override
+    public List<Goal> completedGoals(Integer userId) {
+        return goalRepository.findByUserIdAndStatus(userId,"COMPLETED");
+    }
+
+    @Override
+    public void updateProgress(Integer Id, double amount) {
+        Goal goal = goalRepository.findById(Id).orElseThrow(()->new RuntimeException("Goal not found"));
+        if (amount <= 0) {
+            return;
+        }
+
+        BigDecimal rate = currencyRateService.getRateToAmd(goal.getCurrency_code(), LocalDate.now());
+        double amountInAmd = BigDecimal.valueOf(amount)
+                .multiply(rate)
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue();
+
+        double remainingAmount = goal.getTarget_amount() - goal.getSaved_amount();
+        if (amountInAmd > remainingAmount) {
+            throw new IllegalArgumentException("Amount exceeds the remaining goal balance.");
+        }
+
+        goal.setSaved_amount(goal.getSaved_amount() + amountInAmd);
+
+        if (goal.getSaved_amount() >= goal.getTarget_amount()) {
+            goal.setStatus("COMPLETED");
+        }
+        goalRepository.save(goal);
+    }
+
     private void enrichGoalCurrency(Goal goal) {
         String currencyCode = normalizeCurrency(goal.getCurrency_code());
         BigDecimal originalAmount = BigDecimal.valueOf(goal.getTarget_amount());

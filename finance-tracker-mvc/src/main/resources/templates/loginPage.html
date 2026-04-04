@@ -40,7 +40,13 @@
         </label>
         <label class="input-group">
           <span th:text="#{login.password}">Password</span>
-          <input class="input" type="password" name="password" required>
+          <div class="password-field">
+            <input class="input password-input" id="loginPassword" type="password" name="password" required>
+            <button class="password-toggle" type="button" data-password-toggle
+                    th:attr="aria-label=#{login.password.toggle.show},data-label-show=#{login.password.toggle.show},data-label-hide=#{login.password.toggle.hide}">
+              <span aria-hidden="true">👁</span>
+            </button>
+          </div>
         </label>
         <button class="btn btn-primary" type="submit" th:text="#{login.signin}">Sign in</button>
       </form>
@@ -57,6 +63,17 @@
       const stored = localStorage.getItem(storageKey);
       const initial = stored ? stored : "dark";
       document.body.classList.toggle("theme-light", initial === "light");
+
+      const toggle = document.querySelector("[data-password-toggle]");
+      const passwordInput = document.querySelector("#loginPassword");
+      if (!toggle || !passwordInput) return;
+
+      toggle.addEventListener("click", () => {
+        const showPassword = passwordInput.type === "password";
+        passwordInput.type = showPassword ? "text" : "password";
+        toggle.setAttribute("aria-label", showPassword ? (toggle.dataset.labelHide || "Hide password") : (toggle.dataset.labelShow || "Show password"));
+        toggle.classList.toggle("is-active", showPassword);
+      });
     })();
   </script>
 </body>

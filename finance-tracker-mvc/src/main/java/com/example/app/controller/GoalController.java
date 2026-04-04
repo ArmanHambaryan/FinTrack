@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import service.GoalService;
 import service.UserService;
 
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Controller
@@ -63,5 +66,30 @@ public class GoalController {
 
         return "redirect:/user/home";
     }
+    @PostMapping("/{id}/progress")
+    public String updateProgress(@PathVariable Integer id,
+                                 @RequestParam("amount") BigDecimal amount,
+                                 Authentication authentication) {
+        String username = authentication.getName();
+        User user = userService.findByEmail(username).orElse(null);
+        Goal goal = goalService.getGoalById(id);
 
+        if (user == null || goal == null || !user.getId().equals(goal.getUserId())) {
+            return "redirect:/user/home";
+        }
+        if (amount == null || amount.signum() <= 0) {
+            return "redirect:/user/home?goalMessage=" + encodeMessage("Amount must be greater than 0.");
+        }
+
+        try {
+            goalService.updateProgress(id, amount.doubleValue());
+        } catch (IllegalArgumentException e) {
+            return "redirect:/user/home?goalMessage=" + encodeMessage(e.getMessage());
+        }
+        return "redirect:/user/home";
+    }
+
+    private String encodeMessage(String message) {
+        return URLEncoder.encode(message, StandardCharsets.UTF_8);
+    }
 }

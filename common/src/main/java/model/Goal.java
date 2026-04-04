@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Data
 @AllArgsConstructor
@@ -69,6 +71,24 @@ public class Goal {
     @PreUpdate
     public void preUpdate() {
         updated_at = LocalDateTime.now();
+    }
+
+    public double getProgressPercent() {
+        if (target_amount <= 0) {
+            return 0.0;
+        }
+
+        double progress = (saved_amount * 100.0) / target_amount;
+        if (progress < 0) {
+            return 0.0;
+        }
+        if (progress > 100) {
+            return 100.0;
+        }
+
+        return BigDecimal.valueOf(progress)
+                .setScale(1, RoundingMode.HALF_UP)
+                .doubleValue();
     }
 }
 

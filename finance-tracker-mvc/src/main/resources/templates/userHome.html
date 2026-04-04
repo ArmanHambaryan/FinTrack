@@ -77,6 +77,9 @@
       <div class="card panel">
         <h2 class="section-title" th:text="#{user.goal.current.title}">Current goals</h2>
         <p class="muted" th:text="#{user.goal.current.subtitle}">Stay focused with quick snapshots.</p>
+        <p class="alert error" th:if="${goalMessage != null}" th:text="${goalMessage}">
+          Amount exceeds the remaining goal balance.
+        </p>
         <ul class="goals-list">
           <li class="goal-item" th:if="${#lists.isEmpty(goals)}" th:text="#{user.goal.empty}">No goals yet.</li>
           <li class="goal-item" th:each="goal : ${goals}">
@@ -90,6 +93,40 @@
                    th:text="#{user.goal.target.amd(${#numbers.formatDecimal(goal.target_amount, 1, 2)})}">
                 0
               </div>
+              <div class="muted"
+                   th:text="#{user.goal.saved(${#numbers.formatDecimal(goal.saved_amount, 1, 2)})}">
+                0
+              </div>
+              <div class="goal-progress">
+                <div class="goal-progress-header">
+                  <span class="muted" th:text="#{user.goal.progress}">Progress tracking</span>
+                  <span class="goal-progress-value"
+                        th:text="${#numbers.formatDecimal(goal.progressPercent, 1, 1) + '%'}">0%</span>
+                </div>
+                <div class="goal-progress-track"
+                     role="progressbar"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     th:attr="aria-valuenow=${goal.progressPercent}">
+                  <div class="goal-progress-fill"
+                       th:style="|width:${goal.progressPercent}%|"></div>
+                </div>
+              </div>
+              <form class="form-grid" th:action="@{/goals/{id}/progress(id=${goal.id})}" method="post" style="margin-top: 12px;">
+                <label class="input-group" th:for="${'goalAmount-' + goal.id}">
+                  <span th:text="#{user.goal.add.amount(${goal.currency_code})}">Add amount</span>
+                  <input class="input"
+                         th:id="${'goalAmount-' + goal.id}"
+                         name="amount"
+                         type="number"
+                         min="0.01"
+                         step="0.01"
+                         th:placeholder="#{user.goal.add.amount.placeholder}"
+                         placeholder="100"
+                         required>
+                </label>
+                <button class="btn btn-secondary" type="submit" th:text="#{user.goal.add.progress}">Add amount</button>
+              </form>
             </div>
             <div class="cta-row">
               <form th:action="@{/goals/delete/{id}(id=${goal.id})}" method="post">
