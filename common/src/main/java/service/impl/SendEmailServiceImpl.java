@@ -22,6 +22,7 @@ public class SendEmailServiceImpl implements INotificationService {
 
     private final JavaMailSender mailSender;
     private static final String WELCOME_SUBJECT = "Welcome!";
+    public static final String RESET_PASSWORD_SUBJECT = "Reset Password!";
     private static final String LOGIN_URL = "http://localhost:8083/loginPage";
 
     @Value("${spring.mail.username}")
@@ -45,6 +46,16 @@ public class SendEmailServiceImpl implements INotificationService {
     }
 
     private String buildContent(String to, String subject, String content) {
+        if (RESET_PASSWORD_SUBJECT.equals(subject)) {
+            try (InputStream inputStream = new ClassPathResource("mail/reset-password.html").getInputStream()) {
+                String template = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+                return template
+                        .replace("{{email}}", to)
+                        .replace("{{resetUrl}}", content);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to load reset password email template", e);
+            }
+        }
         if (!WELCOME_SUBJECT.equals(subject)) {
             return content;
         }

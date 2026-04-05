@@ -5,15 +5,12 @@ import model.Goal;
 import model.RecurringTransaction;
 import model.User;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import service.BudgetService;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import service.BudgetService;
 import service.GoalService;
 import service.RecurringTransactionService;
 import service.TransactionService;
@@ -34,7 +31,6 @@ public class UserController {
     private final BudgetService budgetService;
     private final TransactionService transactionService;
     private final RecurringTransactionService recurringService;
-    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/user/home")
     public String userHome(Model model,
@@ -96,33 +92,5 @@ public class UserController {
     public String deleteUserById(@PathVariable int id) {
         userService.deleteById(id);
         return "redirect:/admin/home";
-    }
-    @GetMapping("/forgotPassword")
-    public String passwordForgetPage() {
-        return "forgotPassword";
-    }
-
-    @PostMapping("/forgotPassword")
-    public String handlePasswordForget(@RequestParam String email,
-                                       @RequestParam String oldPassword,
-                                       @RequestParam String newPassword,
-                                       ModelMap modelMap) {
-
-        User user = userService.findByEmail(email).orElse(null);
-
-        if (user == null) {
-            modelMap.addAttribute("error", "User not found.");
-            return "forgotPassword";
-        }
-
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            modelMap.addAttribute("error", "Old password is incorrect.");
-            return "forgotPassword";
-        }
-
-        user.setPassword(passwordEncoder.encode(newPassword));
-        userService.save(user);
-
-        return "redirect:/loginPage?msg=Password updated successfully";
     }
 }

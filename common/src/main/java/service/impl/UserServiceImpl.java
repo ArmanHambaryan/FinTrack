@@ -5,12 +5,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mapper.UserMapper;
 import model.User;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import repository.PasswordResetTokenRepository;
 import repository.UserRepository;
 import service.INotificationService;
 import service.UserService;
@@ -26,6 +28,7 @@ public class UserServiceImpl implements UserService {
 
     private final INotificationService notificationService;
     private final UserRepository userRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
@@ -59,8 +62,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Integer id) {
-        userRepository.deleteById(id);
+        userRepository.findById(id).ifPresent(user -> {
+            passwordResetTokenRepository.deleteByUser(user);
+            userRepository.delete(user);
+        });
     }
 
     @Override
