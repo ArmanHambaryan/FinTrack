@@ -40,6 +40,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
+    @Override
+    public List<User> searchUsers(String search) {
+        return userRepository.globalSearchUsers(search);
+    }
+
 
     @Override
     public User save(User user) {

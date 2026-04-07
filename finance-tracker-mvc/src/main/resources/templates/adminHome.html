@@ -40,10 +40,23 @@
     <section class="card panel">
       <h2 class="section-title" th:text="#{admin.section.title}">User management</h2>
       <p class="muted" th:text="#{admin.section.subtitle}">Review user status and manage access.</p>
+
+      <form class="form-grid" th:action="@{/admin/home}" method="get" style="margin: 18px 0 22px;">
+        <label class="input-group">
+          <span>Search by username</span>
+          <input class="input" type="text" name="q" th:value="${q}" placeholder="Username">
+        </label>
+        <div class="cta-row">
+          <button class="btn btn-primary" type="submit">Search</button>
+          <a class="btn btn-ghost" th:href="@{/admin/home}">Clear</a>
+        </div>
+      </form>
+
       <ul class="goals-list">
         <li class="goal-item" th:if="${#lists.isEmpty(users)}" th:text="#{admin.empty}">No users found.</li>
         <li class="goal-item" th:each="user : ${users}">
           <div>
+            <div th:text="${user.username}">username</div>
             <div th:text="${user.email}">user@email.com</div>
             <div>
               <span class="status offline" th:if="${user.blocked}" th:text="#{admin.status.blocked}">Blocked</span>
@@ -73,7 +86,7 @@
       <div class="cta-row" style="margin-top: 16px;" th:if="${totalPages != null and totalPages > 1}">
         <a class="pill"
            th:if="${currentPage > 0}"
-           th:href="@{/admin/home(page=${currentPage - 1})}" th:text="#{pagination.prev}">Previous</a>
+           th:href="@{/admin/home(page=${currentPage - 1}, q=${q})}" th:text="#{pagination.prev}">Previous</a>
 
         <span class="pill"
               th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
@@ -82,7 +95,7 @@
 
         <a class="pill"
            th:if="${currentPage < totalPages - 1}"
-           th:href="@{/admin/home(page=${currentPage + 1})}" th:text="#{pagination.next}">Next</a>
+           th:href="@{/admin/home(page=${currentPage + 1}, q=${q})}" th:text="#{pagination.next}">Next</a>
       </div>
     </section>
   </main>

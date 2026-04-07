@@ -27,13 +27,26 @@ public class AdminController {
     private final UserService userService;
 
     @GetMapping("/home")
-    public String adminHome(@RequestParam(defaultValue = "0") int page, Model model) {
-        Page<User> usersPage = userService.getAllUsers(page);
+    public String adminHome(@RequestParam(defaultValue = "0") int page,
+                            @RequestParam(required = false) String q,
+                            Model model) {
         double highIncomeThreshold = 300000.0;
         List<User> highIncomeUsers = userRepository.findByBalanceGreaterThan(highIncomeThreshold);
-        model.addAttribute("users", usersPage.getContent());
-        model.addAttribute("currentPage", usersPage.getNumber());
-        model.addAttribute("totalPages", usersPage.getTotalPages());
+        String searchQuery = q == null ? "" : q.trim();
+
+        if (!searchQuery.isEmpty()) {
+            List<User> users = userService.searchUsers(searchQuery);
+            model.addAttribute("users", users);
+            model.addAttribute("currentPage", 0);
+            model.addAttribute("totalPages", 1);
+        } else {
+            Page<User> usersPage = userService.getAllUsers(page);
+            model.addAttribute("users", usersPage.getContent());
+            model.addAttribute("currentPage", usersPage.getNumber());
+            model.addAttribute("totalPages", usersPage.getTotalPages());
+        }
+
+        model.addAttribute("q", searchQuery);
         model.addAttribute("highIncomeUsers", highIncomeUsers);
         model.addAttribute("highIncomeThreshold", highIncomeThreshold);
         model.addAttribute("onlineCutoff", LocalDateTime.now().minusMinutes(5));
