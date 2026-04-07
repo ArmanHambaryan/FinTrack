@@ -38,4 +38,6 @@ public interface UserService {
 
     Page<User> getAllUsers(int page);
 
+    List<User> searchUsers(String q);
+
 }
