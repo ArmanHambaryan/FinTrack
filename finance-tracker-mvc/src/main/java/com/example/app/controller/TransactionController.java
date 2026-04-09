@@ -60,6 +60,7 @@ public class TransactionController {
         model.addAttribute("transactions", transactions);
         model.addAttribute("categories", categories);
         model.addAttribute("categoryNames", categoryNames);
+        model.addAttribute("currentBalance", user.getBalance());
         model.addAttribute("msg", msg);
 
         List<Object[]> categoryData = transactionRepository.getExpensesByCategory(user.getId());

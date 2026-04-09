@@ -119,6 +119,10 @@
       <span th:text="#{app.title}">Finance Tracker</span>
     </div>
     <nav class="nav-links">
+      <div class="balance-chip">
+        <span class="balance-chip-label" th:text="#{user.balance.label}">Available now</span>
+        <strong class="balance-chip-value" th:text="${@templateFormatUtils.formatAmount(currentBalance) + ' AMD'}">0 AMD</strong>
+      </div>
       <a class="pill" th:href="@{/user/home}" th:text="#{nav.user.home}">User Home</a>
     </nav>
   </header>
@@ -258,7 +262,7 @@
         <div class="rounded-2xl border border-outline-variant/40 p-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div class="flex flex-col gap-1">
             <strong th:text="${rec.description}">-</strong>
-            <span class="text-on-surface-variant" th:text="${rec.amount + ' ' + rec.currency_code}">0 AMD</span>
+            <span class="text-on-surface-variant" th:text="${@templateFormatUtils.formatAmount(rec.amount) + ' ' + rec.currency_code}">0 AMD</span>
             <div class="text-on-surface-variant flex flex-wrap gap-2 text-sm">
               <span th:text="#{${'transactions.recurring.type.' + #strings.toLowerCase(rec.type)}}">INCOME</span>
               <span th:text="#{${'transactions.recurring.frequency.' + #strings.toLowerCase(rec.frequency)}}">MONTHLY</span>
@@ -303,8 +307,8 @@
         </tr>
         <tr th:each="tx : ${transactions}">
           <td th:text="${tx.type}">INCOME</td>
-          <td th:text="${tx.amount + ' AMD'}">0</td>
-          <td th:text="${tx.original_amount + ' ' + tx.currency_code + ' @ ' + tx.exchange_rate}">0</td>
+          <td th:text="${@templateFormatUtils.formatAmount(tx.amount) + ' AMD'}">0</td>
+          <td th:text="${@templateFormatUtils.formatAmount(tx.original_amount) + ' ' + tx.currency_code}">0</td>
           <td th:text="${tx.categoryId != null and categoryNames.containsKey(tx.categoryId) ? categoryNames.get(tx.categoryId) : '-'}">-</td>
           <td th:text="${#temporals.format(tx.transaction_date, 'yyyy-MM-dd HH:mm')}">2026-03-12 12:00</td>
           <td th:text="${tx.description}">-</td>
@@ -348,6 +352,19 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:inline="javascript">
   (() => {
+    const formatAmount = (value) => {
+      const number = Number(value ?? 0);
+      const parts = new Intl.NumberFormat("en-US", {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      }).formatToParts(number);
+
+      return parts.map((part) => {
+        if (part.type === "group") return ".";
+        if (part.type === "decimal") return ",";
+        return part.value;
+      }).join("");
+    };
     const categories = [[${chartCategories}]];
     const amounts = [[${chartAmounts}]];
     const months = [[${chartMonths}]];
@@ -411,7 +428,7 @@
                 label: (context) => {
                   const label = context.label || "";
                   const value = context.parsed;
-                  return `${label}: ${value}`;
+                  return `${label}: ${formatAmount(value)} AMD`;
                 }
               }
             }

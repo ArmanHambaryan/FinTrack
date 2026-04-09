@@ -52,6 +52,7 @@ public class UserController {
         if (userId != null) {
             model.addAttribute("userId", userId);
         }
+        model.addAttribute("currentBalance", user == null ? 0.0 : user.getBalance());
 
         Double budget = (user == null) ? 0.0 : budgetService.getCurrentMonthBudget(user.getId());
         Double expense = (user == null) ? 0.0 : transactionService.getMonthlyExpense(user.getId());
