@@ -69,7 +69,7 @@
               <span class="status warning" th:if="${user.balance > highIncomeThreshold}"
                     th:text="#{admin.status.high_income}">High income</span>
             </div>
-            <div class="muted" th:text="#{admin.balance(${user.balance})}">Balance: 0</div>
+            <div class="muted" th:text="#{admin.balance(${@templateFormatUtils.formatAmount(user.balance)})}">Balance: 0</div>
           </div>
           <div class="cta-row">
             <form th:action="@{/admin/block/{id}(id=${user.id})}" method="post">

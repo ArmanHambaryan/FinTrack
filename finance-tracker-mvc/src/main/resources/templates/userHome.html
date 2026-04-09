@@ -33,6 +33,10 @@
         <span th:text="#{app.title}">Finance Tracker</span>
       </div>
       <nav class="nav-links">
+        <div class="balance-chip">
+          <span class="balance-chip-label" th:text="#{user.balance.label}">Available now</span>
+          <strong class="balance-chip-value" th:text="${@templateFormatUtils.formatAmount(currentBalance) + ' AMD'}">0 AMD</strong>
+        </div>
         <a class="pill" th:href="@{/user/home}" th:text="#{nav.user.home}">User Home</a>
         <a class="btn btn-secondary" th:href="@{/transaction}" th:text="#{nav.add.transaction}">Add Transaction</a>
       </nav>
@@ -86,15 +90,15 @@
             <div>
               <div th:text="${goal.name}">Goal name</div>
               <div class="muted"
-                   th:text="#{user.goal.target.label(${#numbers.formatDecimal(goal.original_target_amount, 1, 2)}, ${goal.currency_code})}">
+                   th:text="#{user.goal.target.label(${@templateFormatUtils.formatAmount(goal.original_target_amount)}, ${goal.currency_code})}">
                 0
               </div>
               <div class="muted"
-                   th:text="#{user.goal.target.amd(${#numbers.formatDecimal(goal.target_amount, 1, 2)})}">
+                   th:text="#{user.goal.target.amd(${@templateFormatUtils.formatAmount(goal.target_amount)})}">
                 0
               </div>
               <div class="muted"
-                   th:text="#{user.goal.saved(${#numbers.formatDecimal(goal.saved_amount, 1, 2)})}">
+                   th:text="#{user.goal.saved(${@templateFormatUtils.formatAmount(goal.saved_amount)})}">
                 0
               </div>
               <div class="goal-progress">
@@ -186,11 +190,11 @@
       <div class="goals-list" th:if="${calculatorResult != null}" style="margin-top: 18px;">
         <div class="goal-item">
           <span th:text="#{calc.monthly}">Monthly saving</span>
-          <span th:text="${calculatorResult + ' ' + calculatorCurrencyCode}">0</span>
+          <span th:text="${@templateFormatUtils.formatAmount(calculatorResult) + ' ' + calculatorCurrencyCode}">0</span>
         </div>
         <div class="goal-item">
           <span th:text="#{calc.monthly.amd}">Monthly saving in AMD</span>
-          <span th:text="${calculatorResultAmd + ' AMD'}">0</span>
+          <span th:text="${@templateFormatUtils.formatAmount(calculatorResultAmd) + ' AMD'}">0</span>
         </div>
       </div>
     </section>
@@ -209,11 +213,11 @@
       <div class="goals-list">
         <div class="goal-item">
           <span th:text="#{budget.label(${periodLabel})}">Budget</span>
-          <span th:text="${budget}">0</span>
+          <span th:text="${@templateFormatUtils.formatAmount(budget) + ' AMD'}">0</span>
         </div>
         <div class="goal-item">
           <span th:text="#{budget.expense(${periodLabel})}">Expense</span>
-          <span th:text="${expense}">0</span>
+          <span th:text="${@templateFormatUtils.formatAmount(expense) + ' AMD'}">0</span>
         </div>
         <div class="goal-item">
           <span th:text="#{budget.usage(${periodLabel})}">Usage</span>
