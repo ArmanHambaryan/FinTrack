@@ -12,6 +12,9 @@
   --card: rgba(255, 255, 255, 0.08);
   --stroke: rgba(255, 255, 255, 0.18);
   --shadow: 0 30px 80px rgba(3, 6, 15, 0.45);
+  --dashboard-sidebar-width: 228px;
+  --dashboard-gap: 18px;
+  --dashboard-content-width: 1074px;
 }
 
 *,
@@ -75,11 +78,172 @@ button {
 }
 
 .shell {
-  max-width: 1080px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 56px 24px 80px;
+  padding: 48px 20px 80px;
   position: relative;
   z-index: 1;
+}
+
+.dashboard-shell {
+  display: grid;
+  grid-template-columns: var(--dashboard-sidebar-width) minmax(0, 1fr);
+  gap: var(--dashboard-gap);
+  align-items: start;
+}
+
+.sidebar {
+  position: sticky;
+  top: 108px;
+  padding: 20px 16px;
+  display: grid;
+  gap: 20px;
+  max-height: calc(100vh - 132px);
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.sidebar-nav {
+  display: grid;
+  gap: 10px;
+}
+
+.sidebar-section {
+  display: grid;
+  gap: 8px;
+}
+
+.sidebar-subnav {
+  display: grid;
+  gap: 6px;
+  padding-left: 12px;
+}
+
+.sidebar-sublink {
+  padding: 8px 12px;
+  border-left: 2px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  font-size: 0.92rem;
+  transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.sidebar-sublink:hover {
+  color: var(--text);
+  border-color: rgba(122, 168, 255, 0.4);
+  transform: translateX(2px);
+}
+
+.sidebar-sublink.is-active {
+  color: var(--text);
+  border-color: rgba(79, 209, 197, 0.7);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 13px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.sidebar-link:hover {
+  transform: translateX(3px);
+  color: var(--text);
+  border-color: var(--stroke);
+}
+
+.sidebar-link.is-active {
+  color: var(--text);
+  background: linear-gradient(135deg, rgba(122, 168, 255, 0.24), rgba(79, 209, 197, 0.14));
+  border-color: rgba(122, 168, 255, 0.34);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.sidebar-meta {
+  display: grid;
+  gap: 12px;
+}
+
+.sidebar-content {
+  min-width: 0;
+  width: 100%;
+  max-width: var(--dashboard-content-width);
+}
+
+.shell.dashboard-shell {
+  max-width: none;
+  width: auto;
+  margin-left: 24px;
+  margin-right: auto;
+  padding-right: 24px;
+}
+
+.content-stack {
+  display: grid;
+  gap: 24px;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.dashboard-shell .split {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.dashboard-title {
+  margin: 0;
+  font-size: clamp(2rem, 2.2vw + 1rem, 3rem);
+  font-family: "Space Grotesk", "Sora", sans-serif;
+}
+
+.dashboard-subtitle {
+  margin: 8px 0 0;
+  color: var(--muted);
+  max-width: 680px;
+}
+
+.inline-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.metric-card {
+  min-width: 170px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.metric-card strong,
+.metric-card span:last-child {
+  display: block;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 6px;
 }
 
 .topbar {
@@ -171,10 +335,11 @@ button {
 .settings {
   position: fixed;
   top: 24px;
-  left: 24px;
+  right: 24px;
   z-index: 3;
   display: grid;
   gap: 12px;
+  justify-items: end;
 }
 
 .settings-panel {
@@ -635,6 +800,19 @@ button {
 }
 
 @media (max-width: 900px) {
+  .shell.dashboard-shell {
+    margin-left: auto;
+    padding-right: 20px;
+  }
+
+  .dashboard-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+  }
+
   .split {
     grid-template-columns: 1fr;
   }
@@ -665,6 +843,10 @@ button {
 @media (max-width: 520px) {
   .shell {
     padding: 40px 18px 64px;
+  }
+
+  .settings {
+    right: 18px;
   }
 
   .cta-row {

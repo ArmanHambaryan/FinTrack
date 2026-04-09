@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title th:text="#{transactions.title}">Transactions</title>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <script id="tailwind-config">
     tailwind.config = {
@@ -66,9 +65,9 @@
             "surface-container": "#0f1930"
           },
           fontFamily: {
-            "headline": ["Plus Jakarta Sans"],
-            "body": ["Manrope"],
-            "label": ["Manrope"]
+            "headline": ["Space Grotesk", "Sora", "sans-serif"],
+            "body": ["Sora", "Space Grotesk", "sans-serif"],
+            "label": ["Sora", "Space Grotesk", "sans-serif"]
           },
           borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
         },
@@ -112,25 +111,57 @@
 </div>
 <div class="decor decor-1"></div>
 <div class="decor decor-2"></div>
-<main class="shell">
-  <header class="topbar">
-    <div class="brand">
+<main class="shell dashboard-shell">
+  <aside class="card sidebar">
+    <div class="sidebar-brand">
       <span class="brand-mark"></span>
       <span th:text="#{app.title}">Finance Tracker</span>
     </div>
-    <nav class="nav-links">
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">
+        <a class="sidebar-link" th:href="@{/user/home}" th:text="#{nav.user.home}">User Home</a>
+      </div>
+      <div class="sidebar-section">
+        <a class="sidebar-link is-active" th:href="@{/transaction}" th:text="#{transactions.title}">Transactions</a>
+        <div class="sidebar-subnav">
+          <a class="sidebar-sublink" href="#income-section" th:text="#{transactions.income.title}">Add income</a>
+          <a class="sidebar-sublink" href="#expense-section" th:text="#{transactions.expense.title}">Add expense</a>
+          <a class="sidebar-sublink" href="#recurring-section" th:text="#{transactions.recurring.title}">Recurring transaction</a>
+          <a class="sidebar-sublink" href="#active-recurring-section" th:text="#{transactions.recurring.active}">Active recurring transactions</a>
+          <a class="sidebar-sublink" href="#recent-section" th:text="#{transactions.recent.title}">Recent transactions</a>
+          <a class="sidebar-sublink" href="#insights-section">Insights</a>
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-meta">
       <div class="balance-chip">
         <span class="balance-chip-label" th:text="#{user.balance.label}">Available now</span>
         <strong class="balance-chip-value" th:text="${@templateFormatUtils.formatAmount(currentBalance) + ' AMD'}">0 AMD</strong>
       </div>
-      <a class="pill" th:href="@{/user/home}" th:text="#{nav.user.home}">User Home</a>
-    </nav>
+      <form th:action="@{/logout}" method="post">
+        <button class="btn btn-ghost" type="submit" th:text="#{nav.logout}">Logout</button>
+      </form>
+    </div>
+  </aside>
+
+  <div class="sidebar-content">
+  <header class="dashboard-header">
+    <div>
+      <h1 class="dashboard-title" th:text="#{transactions.title}">Transactions</h1>
+      <p class="dashboard-subtitle" th:text="#{transactions.recent.subtitle}">Your latest income and expense entries.</p>
+    </div>
+    <div class="inline-metrics">
+      <div class="metric-card">
+        <span class="metric-label" th:text="#{user.balance.label}">Available now</span>
+        <strong th:text="${@templateFormatUtils.formatAmount(currentBalance) + ' AMD'}">0 AMD</strong>
+      </div>
+    </div>
   </header>
 
   <p class="alert error" th:if="${msg}" th:text="${msg}">Error</p>
 
   <section class="split">
-    <div class="card panel">
+    <div class="card panel" id="income-section">
       <h1 class="section-title" th:text="#{transactions.income.title}">Add income</h1>
       <p class="muted" th:text="#{transactions.income.subtitle}">
         Record incoming cash and keep your balance accurate.
@@ -161,7 +192,7 @@
       </form>
     </div>
 
-    <div class="card panel">
+    <div class="card panel" id="expense-section">
       <h2 class="section-title" th:text="#{transactions.expense.title}">Add expense</h2>
       <p class="muted" th:text="#{transactions.expense.subtitle}">
         Capture spending and stay on top of your goals.
@@ -198,7 +229,7 @@
   </section>
 
   <section class="split" style="margin-top: 24px;">
-    <div class="card panel">
+    <div class="card panel" id="recurring-section">
       <h2 class="section-title" th:text="#{transactions.recurring.title}">Recurring transaction</h2>
       <p class="muted" th:text="#{transactions.recurring.subtitle}">
         Automatic income or expense every week/month/year.
@@ -251,7 +282,7 @@
       </form>
     </div>
 
-    <div class="card panel">
+    <div class="card panel" id="active-recurring-section">
       <h2 class="section-title" th:text="#{transactions.recurring.active}">Active recurring transactions</h2>
 
       <div th:if="${recurringList.empty}" class="muted" style="margin-top: 12px;">
@@ -280,7 +311,7 @@
     </div>
   </section>
 
-  <section class="card panel" style="margin-top: 24px;">
+  <section class="card panel" id="recent-section" style="margin-top: 24px;">
     <h2 class="section-title" th:text="#{transactions.recent.title}">Recent transactions</h2>
     <p class="muted" th:text="#{transactions.recent.subtitle}">
       Your latest income and expense entries.
@@ -318,7 +349,7 @@
     </div>
   </section>
 
-  <section class="mt-8">
+  <section class="mt-8" id="insights-section">
     <div class="card panel chart-surface rounded-[2rem] p-8 md:p-10 relative overflow-hidden">
       <div class="relative z-10 flex flex-col items-center gap-10">
         <section class="text-center">
@@ -348,6 +379,7 @@
       <div class="absolute -left-24 -top-24 w-80 h-80 bg-secondary/10 rounded-full blur-[100px]"></div>
     </div>
   </section>
+</div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:inline="javascript">

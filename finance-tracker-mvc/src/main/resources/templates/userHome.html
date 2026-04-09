@@ -26,21 +26,43 @@
   </div>
   <div class="decor decor-1"></div>
   <div class="decor decor-2"></div>
-  <main class="shell">
-    <header class="topbar">
-      <div class="brand">
+  <main class="shell dashboard-shell">
+    <aside class="card sidebar">
+      <div class="sidebar-brand">
         <span class="brand-mark"></span>
         <span th:text="#{app.title}">Finance Tracker</span>
       </div>
-      <nav class="nav-links">
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">
+          <a class="sidebar-link is-active" th:href="@{/user/home}" th:text="#{nav.user.home}">User Home</a>
+          <div class="sidebar-subnav">
+            <a class="sidebar-sublink" href="#goals-section" th:text="#{user.goal.current.title}">Current goals</a>
+            <a class="sidebar-sublink" href="#calculator-section" th:text="#{calc.title}">Goal Calculator</a>
+            <a class="sidebar-sublink" href="#budget-section">Monthly Budget</a>
+          </div>
+        </div>
+        <div class="sidebar-section">
+          <a class="sidebar-link" th:href="@{/transaction}" th:text="#{transactions.title}">Transactions</a>
+        </div>
+      </nav>
+      <div class="sidebar-meta">
         <div class="balance-chip">
           <span class="balance-chip-label" th:text="#{user.balance.label}">Available now</span>
           <strong class="balance-chip-value" th:text="${@templateFormatUtils.formatAmount(currentBalance) + ' AMD'}">0 AMD</strong>
         </div>
-        <a class="pill" th:href="@{/user/home}" th:text="#{nav.user.home}">User Home</a>
-        <a class="btn btn-secondary" th:href="@{/transaction}" th:text="#{nav.add.transaction}">Add Transaction</a>
-      </nav>
-    </header>
+        <form th:action="@{/logout}" method="post">
+          <button class="btn btn-ghost" type="submit" th:text="#{nav.logout}">Logout</button>
+        </form>
+      </div>
+    </aside>
+
+    <div class="sidebar-content">
+      <header class="dashboard-header">
+        <div>
+          <h1 class="dashboard-title" th:text="#{user.title}">User Home</h1>
+          <p class="dashboard-subtitle" th:text="#{user.goal.new.subtitle}">Keep your next target visible and measurable.</p>
+        </div>
+      </header>
 
     <section class="split">
       <div class="card panel">
@@ -78,7 +100,7 @@
         </form>
       </div>
 
-      <div class="card panel">
+      <div class="card panel" id="goals-section">
         <h2 class="section-title" th:text="#{user.goal.current.title}">Current goals</h2>
         <p class="muted" th:text="#{user.goal.current.subtitle}">Stay focused with quick snapshots.</p>
         <p class="alert error" th:if="${goalMessage != null}" th:text="${goalMessage}">
@@ -145,7 +167,7 @@
       </div>
     </section>
 
-    <section class="card panel" style="margin-top: 24px;">
+    <section class="card panel" id="calculator-section" style="margin-top: 24px;">
       <h2 class="section-title" th:text="#{calc.title}">Goal Calculator</h2>
       <p class="muted" th:text="#{calc.subtitle}">
         Estimate how much you need to save every month to reach your target.
@@ -199,8 +221,8 @@
       </div>
     </section>
 
-    <section class="card panel" style="margin-top: 24px;">
-      <h2 class="section-title" th:text="#{budget.welcome}">Welcome, User</h2>
+    <section class="card panel" id="budget-section" style="margin-top: 24px;">
+      <h2 class="section-title">Monthly Budget</h2>
       <form class="form-grid" th:action="@{/budget/set}" method="post" style="margin-bottom: 16px;">
         <label class="input-group">
           <span th:text="#{budget.set.label}">Set monthly budget</span>
@@ -233,6 +255,7 @@
       <p class="alert error" th:if="${status == 'ALERT'}" th:text="#{budget.alert.alert}">Budget exceeded</p>
 
     </section>
+    </div>
   </main>
   <script>
     (() => {

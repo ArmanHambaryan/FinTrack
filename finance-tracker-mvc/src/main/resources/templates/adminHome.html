@@ -26,18 +26,32 @@
   </div>
   <div class="decor decor-1"></div>
   <div class="decor decor-2"></div>
-  <main class="shell">
-    <header class="topbar">
-      <div class="brand">
+  <main class="shell dashboard-shell">
+    <aside class="card sidebar">
+      <div class="sidebar-brand">
         <span class="brand-mark"></span>
         <span th:text="#{app.title}">Finance Tracker</span>
       </div>
-      <nav class="nav-links">
-        <a class="pill" th:href="@{/admin/home}" th:text="#{nav.admin.home}">Admin Home</a>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link is-active" th:href="@{/admin/home}" th:text="#{nav.admin.home}">Admin Home</a>
+        <a class="sidebar-link" href="#user-management" th:text="#{admin.section.title}">User management</a>
       </nav>
-    </header>
+      <div class="sidebar-meta">
+        <form th:action="@{/logout}" method="post">
+          <button class="btn btn-ghost" type="submit" th:text="#{nav.logout}">Logout</button>
+        </form>
+      </div>
+    </aside>
 
-    <section class="card panel">
+    <div class="sidebar-content">
+      <header class="dashboard-header">
+        <div>
+          <h1 class="dashboard-title" th:text="#{admin.title}">Admin Panel</h1>
+          <p class="dashboard-subtitle" th:text="#{admin.section.subtitle}">Review user status and manage access.</p>
+        </div>
+      </header>
+
+    <section class="card panel" id="user-management">
       <h2 class="section-title" th:text="#{admin.section.title}">User management</h2>
       <p class="muted" th:text="#{admin.section.subtitle}">Review user status and manage access.</p>
 
@@ -98,6 +112,7 @@
            th:href="@{/admin/home(page=${currentPage + 1}, q=${q})}" th:text="#{pagination.next}">Next</a>
       </div>
     </section>
+    </div>
   </main>
   <script>
     (() => {
