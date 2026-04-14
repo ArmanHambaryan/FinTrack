@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: finance-tracker-rest
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/fin_track}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:2006.Harut}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:no-reply@example.com}
+    password: ${MAIL_PASSWORD:change-me}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+server:
+  port: ${SERVER_PORT:8084}
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:12345678901234567890123456789012}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}
