@@ -1,7 +1,6 @@
 package com.example.rest.controller;
 
 import com.example.rest.dto.RecurringTransactionRestDto;
-import com.example.rest.service.RestDtoMapperService;
 import model.RecurringTransaction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,19 +10,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import service.RecurringTransactionService;
+import com.example.rest.service.RecurringTransactionService;
 
 @RestController
 @RequestMapping("/api/recurring-view")
 public class RecurringViewRestController {
 
     private final RecurringTransactionService recurringTransactionService;
-    private final RestDtoMapperService mapperService;
 
-    public RecurringViewRestController(RecurringTransactionService recurringTransactionService,
-                                       RestDtoMapperService mapperService) {
+    public RecurringViewRestController(RecurringTransactionService recurringTransactionService) {
         this.recurringTransactionService = recurringTransactionService;
-        this.mapperService = mapperService;
     }
 
     @PostMapping("/add")
@@ -31,7 +27,20 @@ public class RecurringViewRestController {
         recurringTransaction.setNextRunDate(recurringTransaction.getStartDate());
         recurringTransaction.setActive(true);
         RecurringTransaction saved = recurringTransactionService.save(recurringTransaction);
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapperService.toRecurringDto(saved));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new RecurringTransactionRestDto(
+                saved.getId(),
+                saved.getUserId(),
+                saved.getAmount(),
+                saved.getCurrency_code(),
+                saved.getExchange_rate(),
+                saved.getType(),
+                saved.getCategoryId(),
+                saved.getDescription(),
+                saved.getFrequency(),
+                saved.getStartDate(),
+                saved.getNextRunDate(),
+                saved.isActive(),
+                saved.getCreated_at()));
     }
 
     @DeleteMapping("/delete/{id}")

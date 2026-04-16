@@ -1,4 +1,4 @@
-package service.impl;
+package com.example.rest.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import model.Goal;
@@ -7,8 +7,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import repository.GoalRepository;
-import service.CurrencyRateService;
-import service.GoalService;
+import com.example.rest.service.CurrencyRateService;
+import com.example.rest.service.GoalService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

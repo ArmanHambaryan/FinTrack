@@ -1,4 +1,4 @@
-package service.impl;
+package com.example.rest.service.impl;
 
 import model.RecurringTransaction;
 import org.springframework.cache.annotation.CacheConfig;
@@ -7,7 +7,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import repository.RecurringTransactionRepository;
-import service.RecurringTransactionService;
+import com.example.rest.service.RecurringTransactionService;
 
 import java.util.List;
 
