@@ -1,4 +1,4 @@
-package service.impl;
+package com.example.rest.service.impl;
 
 import model.Budget;
 import model.User;
@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import repository.BudgetRepository;
 import repository.UserRepository;
-import service.BudgetService;
+import com.example.rest.service.BudgetService;
 
 import java.time.LocalDate;
 import java.util.Optional;

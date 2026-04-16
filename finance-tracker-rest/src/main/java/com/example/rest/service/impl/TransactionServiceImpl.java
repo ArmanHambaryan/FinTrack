@@ -1,4 +1,4 @@
-package service.impl;
+package com.example.rest.service.impl;
 
 
 import lombok.RequiredArgsConstructor;
@@ -20,8 +20,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import repository.TransactionRepository;
 import repository.UserRepository;
-import service.CurrencyRateService;
-import service.TransactionService;
+import com.example.rest.service.CurrencyRateService;
+import com.example.rest.service.TransactionService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

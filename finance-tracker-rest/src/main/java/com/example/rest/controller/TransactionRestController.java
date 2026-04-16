@@ -2,7 +2,6 @@ package com.example.rest.controller;
 
 import com.example.rest.dto.CategoryRestDto;
 import com.example.rest.dto.TransactionRestDto;
-import com.example.rest.service.RestDtoMapperService;
 import model.Category;
 import model.Transaction;
 import org.springframework.http.HttpHeaders;
@@ -14,11 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import repository.TransactionRepository;
-import service.CategoryService;
-import service.TransactionService;
+import com.example.rest.service.CategoryService;
+import com.example.rest.service.TransactionService;
 
 import java.io.IOException;
 import java.time.Month;
@@ -37,16 +35,13 @@ public class TransactionRestController {
     private final TransactionService transactionService;
     private final CategoryService categoryService;
     private final TransactionRepository transactionRepository;
-    private final RestDtoMapperService mapperService;
 
     public TransactionRestController(TransactionService transactionService,
                                      CategoryService categoryService,
-                                     TransactionRepository transactionRepository,
-                                     RestDtoMapperService mapperService) {
+                                     TransactionRepository transactionRepository) {
         this.transactionService = transactionService;
         this.categoryService = categoryService;
         this.transactionRepository = transactionRepository;
-        this.mapperService = mapperService;
     }
 
     @GetMapping("/user/{userId}")
@@ -77,7 +72,19 @@ public class TransactionRestController {
         }
 
         LinkedHashMap<String, Object> response = new LinkedHashMap<>();
-        response.put("transactions", transactions.stream().map(mapperService::toTransactionDto).toList());
+        response.put("transactions", transactions.stream().map(transaction -> new TransactionRestDto(
+                transaction.getId(),
+                transaction.getUserId(),
+                transaction.getAmount(),
+                transaction.getOriginal_amount(),
+                transaction.getCurrency_code(),
+                transaction.getExchange_rate(),
+                transaction.getType(),
+                transaction.getCategoryId(),
+                transaction.getTransaction_date(),
+                transaction.getDescription(),
+                transaction.getCreated_at(),
+                transaction.getUpdated_at())).toList());
         response.put("categories", categories.stream()
                 .map(category -> new CategoryRestDto(
                         category.getId(),
@@ -97,7 +104,19 @@ public class TransactionRestController {
     @PostMapping("/income")
     public TransactionRestDto addIncome(@RequestBody Transaction transaction) {
         transactionService.addIncome(transaction);
-        return mapperService.toTransactionDto(transaction);
+        return new TransactionRestDto(
+                transaction.getId(),
+                transaction.getUserId(),
+                transaction.getAmount(),
+                transaction.getOriginal_amount(),
+                transaction.getCurrency_code(),
+                transaction.getExchange_rate(),
+                transaction.getType(),
+                transaction.getCategoryId(),
+                transaction.getTransaction_date(),
+                transaction.getDescription(),
+                transaction.getCreated_at(),
+                transaction.getUpdated_at());
     }
 
     @PostMapping("/expense")
@@ -114,7 +133,19 @@ public class TransactionRestController {
         transaction.setDescription((String) body.get("description"));
         transaction.setCategoryId(category.getId());
         transactionService.addExpense(transaction);
-        return mapperService.toTransactionDto(transaction);
+        return new TransactionRestDto(
+                transaction.getId(),
+                transaction.getUserId(),
+                transaction.getAmount(),
+                transaction.getOriginal_amount(),
+                transaction.getCurrency_code(),
+                transaction.getExchange_rate(),
+                transaction.getType(),
+                transaction.getCategoryId(),
+                transaction.getTransaction_date(),
+                transaction.getDescription(),
+                transaction.getCreated_at(),
+                transaction.getUpdated_at());
     }
 
     @DeleteMapping("/{id}")

@@ -1,7 +1,6 @@
 package com.example.rest.controller;
 
 import com.example.rest.dto.PasswordResetTokenRestDto;
-import com.example.rest.service.RestDtoMapperService;
 import model.PasswordResetToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,7 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import service.impl.PasswordResetTokenServiceImpl;
+import com.example.rest.service.impl.PasswordResetTokenServiceImpl;
 
 import java.util.Map;
 
@@ -18,12 +17,9 @@ import java.util.Map;
 public class PasswordResetTokenRestController {
 
     private final PasswordResetTokenServiceImpl passwordResetTokenService;
-    private final RestDtoMapperService mapperService;
 
-    public PasswordResetTokenRestController(PasswordResetTokenServiceImpl passwordResetTokenService,
-                                            RestDtoMapperService mapperService) {
+    public PasswordResetTokenRestController(PasswordResetTokenServiceImpl passwordResetTokenService) {
         this.passwordResetTokenService = passwordResetTokenService;
-        this.mapperService = mapperService;
     }
 
     @PostMapping("/send")
@@ -35,7 +31,13 @@ public class PasswordResetTokenRestController {
     @GetMapping("/{token}")
     public PasswordResetTokenRestDto validateToken(@PathVariable String token) {
         PasswordResetToken passwordResetToken = passwordResetTokenService.getValidToken(token);
-        return mapperService.toPasswordResetTokenDto(passwordResetToken);
+        return new PasswordResetTokenRestDto(
+                passwordResetToken.getId(),
+                passwordResetToken.getToken(),
+                passwordResetToken.getUser().getId(),
+                passwordResetToken.getUser().getEmail(),
+                passwordResetToken.getExpiryDate(),
+                passwordResetToken.isExpired());
     }
 
     @PostMapping("/{token}")

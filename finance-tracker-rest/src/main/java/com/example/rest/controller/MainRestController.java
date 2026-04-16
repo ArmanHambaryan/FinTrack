@@ -1,7 +1,6 @@
 package com.example.rest.controller;
 
 import com.example.rest.dto.UserRestDto;
-import com.example.rest.service.RestDtoMapperService;
 import model.User;
 import model.UserRole;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import service.UserService;
+import com.example.rest.service.UserService;
 
 import java.util.LinkedHashMap;
 
@@ -21,11 +20,9 @@ import java.util.LinkedHashMap;
 public class MainRestController {
 
     private final UserService userService;
-    private final RestDtoMapperService mapperService;
 
-    public MainRestController(UserService userService, RestDtoMapperService mapperService) {
+    public MainRestController(UserService userService) {
         this.userService = userService;
-        this.mapperService = mapperService;
     }
 
     @GetMapping("/")
@@ -52,7 +49,16 @@ public class MainRestController {
         LinkedHashMap<String, Object> response = new LinkedHashMap<>();
         response.put("role", user.getRole().name());
         response.put("redirectTo", "ADMIN".equals(user.getRole().name()) ? "/api/admin/users" : "/api/users/" + user.getId() + "/dashboard");
-        response.put("user", mapperService.toUserDto(user));
+        response.put("user", new UserRestDto(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole(),
+                user.getBalance(),
+                user.isBlocked(),
+                user.getCreated_at(),
+                user.getUpdated_at(),
+                user.getLastActive()));
         return response;
     }
 
@@ -86,6 +92,15 @@ public class MainRestController {
 
         userService.register(registeredUser);
         User savedUser = userService.findByEmail(registeredUser.getEmail()).orElseThrow();
-        return ResponseEntity.status(HttpStatus.CREATED).body(mapperService.toUserDto(savedUser));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new UserRestDto(
+                savedUser.getId(),
+                savedUser.getUsername(),
+                savedUser.getEmail(),
+                savedUser.getRole(),
+                savedUser.getBalance(),
+                savedUser.isBlocked(),
+                savedUser.getCreated_at(),
+                savedUser.getUpdated_at(),
+                savedUser.getLastActive()));
     }
 }

@@ -1,4 +1,4 @@
-package service.impl;
+package com.example.rest.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import model.Category;
@@ -7,7 +7,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import repository.CategoryRepository;
-import service.CategoryService;
+import com.example.rest.service.CategoryService;
 
 import java.util.List;
 @Service

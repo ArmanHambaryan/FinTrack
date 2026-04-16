@@ -1,0 +1,8 @@
+package com.example.rest.service;
+
+public interface BudgetService {
+
+    void setBudget(Integer userId, Double amount);
+
+    Double getCurrentMonthBudget(Integer userId);
+}

@@ -1,13 +1,13 @@
-package service.impl;
+package com.example.rest.service.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import service.CurrencyRateService;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import com.example.rest.service.CurrencyRateService;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringReader;

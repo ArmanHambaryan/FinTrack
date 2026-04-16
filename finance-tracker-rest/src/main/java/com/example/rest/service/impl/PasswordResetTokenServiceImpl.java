@@ -1,4 +1,4 @@
-package service.impl;
+package com.example.rest.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import model.PasswordResetToken;
@@ -8,7 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import repository.PasswordResetTokenRepository;
 import repository.UserRepository;
-import service.INotificationService;
+import com.example.rest.service.INotificationService;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
