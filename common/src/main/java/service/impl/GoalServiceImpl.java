@@ -2,11 +2,14 @@ package service.impl;
 
 import lombok.RequiredArgsConstructor;
 import model.Goal;
+import model.User;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import repository.GoalRepository;
+import repository.UserRepository;
 import service.CurrencyRateService;
 import service.GoalService;
 
@@ -21,6 +24,7 @@ import java.util.Locale;
 @CacheConfig(cacheNames = "goals")
 public class GoalServiceImpl implements GoalService {
     private final GoalRepository goalRepository;
+    private final UserRepository userRepository;
     private final CurrencyRateService currencyRateService;
 
 
@@ -95,6 +99,7 @@ public class GoalServiceImpl implements GoalService {
     }
 
     @Override
+    @Transactional
     @CacheEvict(allEntries = true)
     public void updateProgress(Integer Id, double amount) {
         Goal goal = goalRepository.findById(Id).orElseThrow(()->new RuntimeException("Goal not found"));
@@ -113,11 +118,22 @@ public class GoalServiceImpl implements GoalService {
             throw new IllegalArgumentException("Amount exceeds the remaining goal balance.");
         }
 
+        User user = userRepository.findById(goal.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        if (user.getBalance() < amountInAmd) {
+            throw new IllegalArgumentException("Insufficient available balance.");
+        }
+
         goal.setSaved_amount(goal.getSaved_amount() + amountInAmd);
+        user.setBalance(BigDecimal.valueOf(user.getBalance())
+                .subtract(BigDecimal.valueOf(amountInAmd))
+                .setScale(2, RoundingMode.HALF_UP)
+                .doubleValue());
 
         if (goal.getSaved_amount() >= goal.getTarget_amount()) {
             goal.setStatus("COMPLETED");
         }
+        userRepository.save(user);
         goalRepository.save(goal);
     }
 
