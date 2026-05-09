@@ -1,9 +1,7 @@
 package service.impl;
 
-
 import lombok.RequiredArgsConstructor;
 import model.Transaction;
-import model.User;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -116,7 +114,6 @@ public class TransactionServiceImpl implements TransactionService {
         LocalDateTime start = now.withDayOfMonth(1).atStartOfDay();
         LocalDateTime end = now.withDayOfMonth(now.lengthOfMonth()).atTime(23, 59, 59);
         return transactionRepository.sumMonthlyExpense(userId, start, end);
-
     }
 
     private void applyBalanceChange(Transaction transaction, boolean isIncome) {
@@ -133,6 +130,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private void enrichTransactionCurrency(Transaction transaction) {
+        // Transactions are stored in AMD, but we keep the original amount and currency for display and editing.
         String currencyCode = normalizeCurrency(transaction.getCurrency_code());
         BigDecimal originalAmount = BigDecimal.valueOf(transaction.getAmount() == null ? 0.0 : transaction.getAmount());
         if (transaction.getOriginal_amount() != null && transaction.getOriginal_amount() > 0) {
@@ -157,6 +155,7 @@ public class TransactionServiceImpl implements TransactionService {
         }
         return currencyCode.trim().toUpperCase(Locale.ROOT);
     }
+
     @Override
     @Cacheable(key = "'export:' + #userId")
     public byte[] exportToExcel(Integer userId) throws IOException {
@@ -164,6 +163,7 @@ public class TransactionServiceImpl implements TransactionService {
                 ? List.of()
                 : transactionRepository.findByUserId(userId);
 
+        // The export stays intentionally flat so it opens cleanly in spreadsheet tools without extra parsing.
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Transactions");
 
@@ -207,5 +207,4 @@ public class TransactionServiceImpl implements TransactionService {
         workbook.close();
         return out.toByteArray();
     }
-
 }

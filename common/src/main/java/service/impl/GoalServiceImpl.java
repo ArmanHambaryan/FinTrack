@@ -27,7 +27,6 @@ public class GoalServiceImpl implements GoalService {
     private final UserRepository userRepository;
     private final CurrencyRateService currencyRateService;
 
-
     @Override
     @Cacheable(key = "'all'")
     public List<Goal> getAllGoals() {
@@ -95,18 +94,20 @@ public class GoalServiceImpl implements GoalService {
     @Override
     @Cacheable(key = "'completed:' + #userId")
     public List<Goal> completedGoals(Integer userId) {
-        return goalRepository.findByUserIdAndStatus(userId,"COMPLETED");
+        return goalRepository.findByUserIdAndStatus(userId, "COMPLETED");
     }
 
     @Override
     @Transactional
     @CacheEvict(allEntries = true)
-    public void updateProgress(Integer Id, double amount) {
-        Goal goal = goalRepository.findById(Id).orElseThrow(()->new RuntimeException("Goal not found"));
+    public void updateProgress(Integer id, double amount) {
+        Goal goal = goalRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Goal not found"));
         if (amount <= 0) {
             return;
         }
 
+        // Goal progress is entered in the goal's original currency and stored in AMD.
         BigDecimal rate = currencyRateService.getRateToAmd(goal.getCurrency_code(), LocalDate.now());
         double amountInAmd = BigDecimal.valueOf(amount)
                 .multiply(rate)
@@ -138,6 +139,7 @@ public class GoalServiceImpl implements GoalService {
     }
 
     private void enrichGoalCurrency(Goal goal) {
+        // Persist both the original amount and its AMD equivalent so the UI can show both views consistently.
         String currencyCode = normalizeCurrency(goal.getCurrency_code());
         BigDecimal originalAmount = BigDecimal.valueOf(goal.getTarget_amount());
         if (goal.getOriginal_target_amount() != null && goal.getOriginal_target_amount() > 0) {
