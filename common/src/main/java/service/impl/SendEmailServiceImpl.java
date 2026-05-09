@@ -46,6 +46,7 @@ public class SendEmailServiceImpl implements INotificationService {
     }
 
     private String buildContent(String to, String subject, String content) {
+        // Reset emails use a one-time link, while welcome emails render a richer HTML template.
         if (RESET_PASSWORD_SUBJECT.equals(subject)) {
             try (InputStream inputStream = new ClassPathResource("mail/reset-password.html").getInputStream()) {
                 String template = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);

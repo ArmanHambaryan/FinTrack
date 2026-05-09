@@ -15,6 +15,7 @@ public class OpenApiConfig {
     public OpenAPI financeTrackerOpenApi() {
         final String bearerSchemeName = "bearerAuth";
 
+        // Publish a single reusable bearer scheme so secured endpoints can be tried from Swagger UI.
         return new OpenAPI()
                 .info(new Info()
                         .title("Finance Tracker REST API")

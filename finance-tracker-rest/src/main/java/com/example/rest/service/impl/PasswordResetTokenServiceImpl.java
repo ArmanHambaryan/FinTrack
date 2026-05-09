@@ -25,6 +25,7 @@ public class PasswordResetTokenServiceImpl {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Email not found " + email));
 
+        // Only one active reset token is kept per user so older links stop working immediately.
         passwordResetTokenRepository.deleteByUser(user);
 
         String token = UUID.randomUUID().toString();
@@ -45,6 +46,7 @@ public class PasswordResetTokenServiceImpl {
         PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Token not found " + token));
         if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            // Expired tokens are deleted eagerly to avoid reusing dead reset links.
             passwordResetTokenRepository.delete(resetToken);
             throw new RuntimeException("Token expired");
         }

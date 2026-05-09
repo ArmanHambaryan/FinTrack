@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
+                        // Swagger and the auth/bootstrap endpoints stay public; the rest of /api requires JWT auth.
                         .requestMatchers(
                                 "/",
                                 "/error",
