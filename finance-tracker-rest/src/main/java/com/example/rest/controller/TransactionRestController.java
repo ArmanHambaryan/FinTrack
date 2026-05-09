@@ -2,6 +2,7 @@ package com.example.rest.controller;
 
 import com.example.rest.dto.CategoryRestDto;
 import com.example.rest.dto.TransactionRestDto;
+import lombok.RequiredArgsConstructor;
 import model.Category;
 import model.Transaction;
 import org.springframework.http.HttpHeaders;
@@ -30,19 +31,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/transactions")
+@RequiredArgsConstructor
 public class TransactionRestController {
 
     private final TransactionService transactionService;
     private final CategoryService categoryService;
     private final TransactionRepository transactionRepository;
 
-    public TransactionRestController(TransactionService transactionService,
-                                     CategoryService categoryService,
-                                     TransactionRepository transactionRepository) {
-        this.transactionService = transactionService;
-        this.categoryService = categoryService;
-        this.transactionRepository = transactionRepository;
-    }
 
     @GetMapping("/user/{userId}")
     public LinkedHashMap<String, Object> getTransactions(@PathVariable Integer userId) {

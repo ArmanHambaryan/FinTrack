@@ -1,6 +1,7 @@
 package com.example.rest.controller;
 
 import com.example.rest.dto.PasswordResetTokenRestDto;
+import lombok.RequiredArgsConstructor;
 import model.PasswordResetToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,13 +15,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/password-reset")
+@RequiredArgsConstructor
 public class PasswordResetTokenRestController {
 
     private final PasswordResetTokenServiceImpl passwordResetTokenService;
 
-    public PasswordResetTokenRestController(PasswordResetTokenServiceImpl passwordResetTokenService) {
-        this.passwordResetTokenService = passwordResetTokenService;
-    }
 
     @PostMapping("/send")
     public String sendResetEmail(@RequestBody Map<String, String> body) {

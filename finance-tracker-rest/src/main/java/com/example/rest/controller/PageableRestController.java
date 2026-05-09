@@ -1,6 +1,7 @@
 package com.example.rest.controller;
 
 import com.example.rest.dto.UserRestDto;
+import lombok.RequiredArgsConstructor;
 import model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +14,11 @@ import java.util.LinkedHashMap;
 
 @RestController
 @RequestMapping("/api/pageable")
+@RequiredArgsConstructor
 public class PageableRestController {
 
     private final UserService userService;
 
-    public PageableRestController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/users")
     public LinkedHashMap<String, Object> getUsers(@RequestParam(defaultValue = "0") int page) {

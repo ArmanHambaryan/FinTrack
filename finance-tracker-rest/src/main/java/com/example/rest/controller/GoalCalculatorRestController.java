@@ -1,5 +1,6 @@
 package com.example.rest.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,13 +17,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/calculator")
+@RequiredArgsConstructor
 public class GoalCalculatorRestController {
 
     private final CurrencyRateService currencyRateService;
 
-    public GoalCalculatorRestController(CurrencyRateService currencyRateService) {
-        this.currencyRateService = currencyRateService;
-    }
 
     @GetMapping
     public String showForm() {

@@ -3,6 +3,7 @@ package com.example.rest.controller;
 import com.example.rest.dto.GoalRestDto;
 import com.example.rest.dto.RecurringTransactionRestDto;
 import com.example.rest.dto.UserRestDto;
+import lombok.RequiredArgsConstructor;
 import model.User;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +24,7 @@ import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 public class UserRestController {
 
     private final UserService userService;
@@ -31,17 +33,6 @@ public class UserRestController {
     private final TransactionService transactionService;
     private final RecurringTransactionService recurringTransactionService;
 
-    public UserRestController(UserService userService,
-                              GoalService goalService,
-                              BudgetService budgetService,
-                              TransactionService transactionService,
-                              RecurringTransactionService recurringTransactionService) {
-        this.userService = userService;
-        this.goalService = goalService;
-        this.budgetService = budgetService;
-        this.transactionService = transactionService;
-        this.recurringTransactionService = recurringTransactionService;
-    }
 
     @GetMapping
     public List<UserRestDto> getAllUsers() {

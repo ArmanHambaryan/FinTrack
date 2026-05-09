@@ -1,6 +1,7 @@
 package com.example.rest.controller;
 
 import com.example.rest.dto.RecurringTransactionRestDto;
+import lombok.RequiredArgsConstructor;
 import model.RecurringTransaction;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +18,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/recurring")
+@RequiredArgsConstructor
 public class RecurringTransactionRestController {
 
     private final RecurringTransactionService recurringTransactionService;
 
-    public RecurringTransactionRestController(RecurringTransactionService recurringTransactionService) {
-        this.recurringTransactionService = recurringTransactionService;
-    }
 
     @PostMapping
     public ResponseEntity<RecurringTransactionRestDto> create(@RequestBody RecurringTransaction recurringTransaction) {

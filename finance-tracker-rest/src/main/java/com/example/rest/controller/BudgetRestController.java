@@ -1,6 +1,7 @@
 package com.example.rest.controller;
 
 import com.example.rest.dto.BudgetRestDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,16 +16,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/budgets")
+@RequiredArgsConstructor
 public class BudgetRestController {
 
     private final BudgetService budgetService;
     private final BudgetRepository budgetRepository;
 
-    public BudgetRestController(BudgetService budgetService,
-                                BudgetRepository budgetRepository) {
-        this.budgetService = budgetService;
-        this.budgetRepository = budgetRepository;
-    }
 
     @GetMapping("/{userId}")
     public BudgetRestDto getCurrentBudget(@PathVariable Integer userId) {

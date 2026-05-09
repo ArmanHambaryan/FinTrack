@@ -1,5 +1,6 @@
 package com.example.rest.service.impl;
 
+import com.example.rest.dto.GoalRestDto;
 import lombok.RequiredArgsConstructor;
 import model.Goal;
 import model.User;
@@ -12,6 +13,7 @@ import repository.GoalRepository;
 import repository.UserRepository;
 import com.example.rest.service.CurrencyRateService;
 import com.example.rest.service.GoalService;
+import com.example.rest.service.RestDtoMapperService;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,12 +28,20 @@ public class GoalServiceImpl implements GoalService {
     private final GoalRepository goalRepository;
     private final UserRepository userRepository;
     private final CurrencyRateService currencyRateService;
+    private final RestDtoMapperService restDtoMapperService;
 
 
     @Override
     @Cacheable(key = "'all'")
     public List<Goal> getAllGoals() {
         return goalRepository.findAll();
+    }
+
+    @Override
+    public List<GoalRestDto> getAllGoalDtos() {
+        return getAllGoals().stream()
+                .map(restDtoMapperService::toGoalDto)
+                .toList();
     }
 
     @Override
@@ -45,6 +55,11 @@ public class GoalServiceImpl implements GoalService {
     public Goal createGoal(Goal goal) {
         enrichGoalCurrency(goal);
         return goalRepository.save(goal);
+    }
+
+    @Override
+    public GoalRestDto createGoalDto(Goal goal) {
+        return restDtoMapperService.toGoalDto(createGoal(goal));
     }
 
     @Override
@@ -79,6 +94,13 @@ public class GoalServiceImpl implements GoalService {
     @Cacheable(key = "'user:' + #userId")
     public List<Goal> findByUserId(Integer userId) {
         return goalRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<GoalRestDto> findGoalDtosByUserId(Integer userId) {
+        return findByUserId(userId).stream()
+                .map(restDtoMapperService::toGoalDto)
+                .toList();
     }
 
     @Override
@@ -135,6 +157,12 @@ public class GoalServiceImpl implements GoalService {
         }
         userRepository.save(user);
         goalRepository.save(goal);
+    }
+
+    @Override
+    public GoalRestDto updateProgressAndReturnDto(Integer id, double amount) {
+        updateProgress(id, amount);
+        return restDtoMapperService.toGoalDto(getGoalById(id));
     }
 
     private void enrichGoalCurrency(Goal goal) {

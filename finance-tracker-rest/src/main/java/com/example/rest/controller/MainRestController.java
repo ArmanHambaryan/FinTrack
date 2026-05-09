@@ -1,6 +1,7 @@
 package com.example.rest.controller;
 
 import com.example.rest.dto.UserRestDto;
+import lombok.RequiredArgsConstructor;
 import model.User;
 import model.UserRole;
 import org.springframework.http.HttpStatus;
@@ -17,13 +18,11 @@ import java.util.LinkedHashMap;
 
 @RestController
 @RequestMapping("/api/main")
+@RequiredArgsConstructor
 public class MainRestController {
 
     private final UserService userService;
 
-    public MainRestController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping("/")
     public LinkedHashMap<String, Object> home() {
