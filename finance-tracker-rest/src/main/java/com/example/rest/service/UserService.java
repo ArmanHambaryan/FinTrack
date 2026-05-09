@@ -1,9 +1,11 @@
 package com.example.rest.service;
 
+import com.example.rest.dto.UserRestDto;
 import dto.UserDto;
 import model.User;
 import org.springframework.data.domain.Page;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +41,9 @@ public interface UserService {
     Page<User> getAllUsers(int page);
 
     List<User> searchUsers(String q);
+
+    LinkedHashMap<String, Object> getAdminUsersResponse(String q);
+
+    List<UserRestDto> findUserDtos(List<User> users);
 
 }

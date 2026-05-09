@@ -1,5 +1,6 @@
 package com.example.rest.service.impl;
 
+import com.example.rest.dto.UserRestDto;
 import dto.UserDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +19,11 @@ import org.springframework.stereotype.Service;
 import repository.PasswordResetTokenRepository;
 import repository.UserRepository;
 import com.example.rest.service.INotificationService;
+import com.example.rest.service.RestDtoMapperService;
 import com.example.rest.service.UserService;
 
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final RestDtoMapperService restDtoMapperService;
 
     private static final int PAGE_SIZE = 5;
 
@@ -49,6 +53,30 @@ public class UserServiceImpl implements UserService {
     @Cacheable(key = "'search:' + #search")
     public List<User> searchUsers(String search) {
         return userRepository.globalSearchUsers(search);
+    }
+
+    @Override
+    public LinkedHashMap<String, Object> getAdminUsersResponse(String q) {
+        double highIncomeThreshold = 300000.0;
+        List<UserRestDto> users = findUserDtos(
+                q == null || q.isBlank() ? findAll() : searchUsers(q.trim())
+        );
+        List<UserRestDto> highIncomeUsers = findUserDtos(
+                userRepository.findByBalanceGreaterThan(highIncomeThreshold)
+        );
+
+        LinkedHashMap<String, Object> response = new LinkedHashMap<>();
+        response.put("users", users);
+        response.put("highIncomeThreshold", highIncomeThreshold);
+        response.put("highIncomeUsers", highIncomeUsers);
+        return response;
+    }
+
+    @Override
+    public List<UserRestDto> findUserDtos(List<User> users) {
+        return users.stream()
+                .map(restDtoMapperService::toUserDto)
+                .toList();
     }
 
 

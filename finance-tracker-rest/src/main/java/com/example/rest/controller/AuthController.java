@@ -1,6 +1,7 @@
 package com.example.rest.controller;
 
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +27,7 @@ import com.example.rest.service.UserService;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -33,15 +35,6 @@ public class AuthController {
     private final JwtService jwtService;
     private final UserService userService;
 
-    public AuthController(AuthenticationManager authenticationManager,
-                          CustomUserDetailsService customUserDetailsService,
-                          JwtService jwtService,
-                          UserService userService) {
-        this.authenticationManager = authenticationManager;
-        this.customUserDetailsService = customUserDetailsService;
-        this.jwtService = jwtService;
-        this.userService = userService;
-    }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
