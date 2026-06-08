@@ -5,6 +5,16 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <includeAll path="db/changelog" />
+    <include file="db/changelog/1_create_users_table.xml"/>
+    <include file="db/changelog/2_create_goals_table.xml"/>
+    <include file="db/changelog/3_create_transactions_table.xml"/>
+    <include file="db/changelog/4_add_blocked_column.xml"/>
+    <include file="db/changelog/4_add_last_active_column.xml"/>
+    <include file="db/changelog/5_create_budgets_table.xml"/>
+    <include file="db/changelog/6_add_currency_columns.xml"/>
+    <include file="db/changelog/7_add_categories.xml"/>
+    <include file="db/changelog/8_sync_user_goals_columns.xml"/>
+    <include file="db/changelog/9_create_requrring_transactions.xml"/>
+    <include file="db/changelog/10_create_password_reset_table.xml"/>
 
 </databaseChangeLog>

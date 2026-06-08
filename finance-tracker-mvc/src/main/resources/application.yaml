@@ -26,7 +26,7 @@ spring:
     encoding: UTF-8
     fallback-to-system-locale: false
   datasource:
-    url: jdbc:mysql://localhost:3306/fin_track
+    url: jdbc:mysql://db:3306/fintrack_db
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:2006.Harut}
     driver-class-name: com.mysql.cj.jdbc.Driver
