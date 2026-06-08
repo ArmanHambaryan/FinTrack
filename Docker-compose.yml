@@ -1,0 +1,27 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8083:8083"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_USERNAME: fintrack_user
+      DB_PASSWORD: 2006.Harut
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: fintrack_db
+      MYSQL_USER: fintrack_user
+      MYSQL_PASSWORD: 2006.Harut
+      MYSQL_ROOT_PASSWORD: 2006.Harut
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--protocol=TCP", "-u", "fintrack_user", "-p2006.Harut"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
