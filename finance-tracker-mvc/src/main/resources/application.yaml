@@ -26,7 +26,7 @@ spring:
     encoding: UTF-8
     fallback-to-system-locale: false
   datasource:
-    url: jdbc:mysql://db:3306/fintrack_db
+    url: jdbc:mysql://localhost:3307/fintrack_db
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:2006.Harut}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -45,6 +45,22 @@ spring:
     scheduling:
       enabled: true
 server:
-  port: 8083
+  port: 8084
   address: 0.0.0.0
+
+kafka:
+      # Որտե՞ղ է աշխատում Kafka-ն (Docker-ի դեպքում սովորաբար 9092 պորտն է)
+ bootstrap-servers: localhost:9092
+
+      # Producer-ի կոնֆիգուրացիա (ինչպես վերածել տվյալը բայթերի ուղարկելուց առաջ)
+ producer:
+  key-serializer: org.apache.kafka.common.serialization.StringSerializer
+  value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+      # Consumer-ի կոնֆիգուրացիա (ինչպես բայթերը հետ վերածել տեքստի)
+  consumer:
+  group-id: fintrack-group
+  key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+  auto-offset-reset: earliest
 
